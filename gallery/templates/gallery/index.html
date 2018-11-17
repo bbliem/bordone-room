@@ -1,0 +1,10 @@
+{% if photos_list %}
+    <ul>
+    {% for photo in photos_list %}
+        <!--<li><a href="/gallery/photo/{{ photo.id }}/">{{ photo.name }}</a></li>-->
+        <li><a href="{% url 'gallery:view_photo' photo.id %}">{{ photo.name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>There are no photos.</p>
+{% endif %}

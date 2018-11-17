@@ -1,15 +1,16 @@
-from django.http import HttpResponse
-#from django.shortcuts import render
+from django.http import Http404
+from django.shortcuts import get_object_or_404, render
 
 from .models import Photo
 
 def index(request):
     photos_list = Photo.objects.order_by('-date_taken')[:2]
-    output = ', '.join([ph.name for ph in photos_list])
-    return HttpResponse(output)
+    context = {'photos_list': photos_list}
+    return render(request, 'gallery/index.html', context)
 
 def view_photo(request, photo_id):
-    return HttpResponse(f"Viewing photo {photo_id}")
+    photo = get_object_or_404(Photo, pk=photo_id)
+    return render(request, 'gallery/view_photo.html', {'photo': photo})
 
 def view_album(request, album_id):
-    return HttpResponse(f"Viewing album {album_id}")
+    raise Http404("TODO")

@@ -2,6 +2,7 @@ from django.urls import path
 
 from . import views
 
+app_name = 'gallery'
 urlpatterns = [
     path('', views.index, name='index'),
     path('photo/<int:photo_id>/', views.view_photo, name='view_photo'),
