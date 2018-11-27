@@ -1,6 +1,6 @@
-{% if photos_list %}
+{% if photo_list %}
     <ul>
-    {% for photo in photos_list %}
+    {% for photo in photo_list %}
         <!--<li><a href="/gallery/photo/{{ photo.id }}/">{{ photo.name }}</a></li>-->
         <li><a href="{% url 'gallery:view_photo' photo.id %}">{{ photo.name }}</a></li>
     {% endfor %}
