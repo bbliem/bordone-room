@@ -1,3 +1,7 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'gallery/style.css' %}">
+
 {% if photo_list %}
     <ul>
     {% for photo in photo_list %}
