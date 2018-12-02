@@ -12,3 +12,11 @@
 {% else %}
     <p>There are no photos.</p>
 {% endif %}
+
+<p>Upload</p>
+<form enctype="multipart/form-data" method="post" action="{% url 'gallery:upload_photos' %}">
+  {% csrf_token %}
+  {{ form }}
+  <!--<input type="file" name="photos" multiple>-->
+  <input type="submit" value="Upload">
+</form>

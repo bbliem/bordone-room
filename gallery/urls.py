@@ -7,4 +7,5 @@ urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
     path('photo/<int:pk>/', views.PhotoView.as_view(), name='view_photo'),
     path('album/<int:pk>/', views.view_album, name='view_album'),
+    path('upload/', views.PhotoUploadView.as_view(), name='upload_photos'),
 ]

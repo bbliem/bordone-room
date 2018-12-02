@@ -1,7 +1,7 @@
 body {
-  background: blue url("images/triangles.png");
+  background: white;
 }
 
 li a {
-  color: white;
+  color: green;
 }
