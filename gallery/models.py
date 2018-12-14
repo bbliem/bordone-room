@@ -6,15 +6,15 @@ class Photo(models.Model):
     num_views = models.IntegerField('number of views', default=0)
     original = models.ImageField()
     # Metadata
-    date_taken = models.DateTimeField()
+    date_taken = models.DateTimeField(blank=True, null=True)
     make = models.CharField(max_length=200) # camera producer
     model = models.CharField(max_length=200) # camera model
     lens = models.CharField(max_length=200)
-    aperture = models.DecimalField(max_digits=4, decimal_places=2)
-    focal_length = models.DecimalField(max_digits=6, decimal_places=2)
-    shut_numer = models.IntegerField('shutter speed numerator') # TODO enforce that either this or the denominator is 1?
-    shut_denom = models.IntegerField('shutter speed denominator')
-    iso = models.IntegerField()
+    aperture = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
+    focal_length = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    shut_numer = models.IntegerField('shutter speed numerator', blank=True, null=True) # TODO enforce that either this or the denominator is 1?
+    shut_denom = models.IntegerField('shutter speed denominator', blank=True, null=True)
+    iso = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return self.name
