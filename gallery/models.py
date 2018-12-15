@@ -1,36 +1,4 @@
-from datetime import datetime
-from decimal import Decimal, InvalidOperation
-import pytz
-
 from django.db import models
-
-EXIF_DATE_FORMAT = '%Y:%m:%d %H:%M:%S'
-
-def _parse_datetime(s):
-    try:
-        dto = datetime.strptime(s, EXIF_DATE_FORMAT)
-        # XXX use UTC as EXIF has no information on time zones
-        return dto.replace(tzinfo=pytz.UTC)
-    except (ValueError, TypeError):
-        return None
-
-def _parse_decimal(s):
-    try:
-        return Decimal(s)
-    except (TypeError, InvalidOperation):
-        return None
-
-def _parse_float(s):
-    try:
-        return float(s)
-    except (ValueError, TypeError):
-        return None
-
-def _parse_int(s):
-    try:
-        return int(s)
-    except (ValueError, TypeError):
-        return None
 
 class Photo(models.Model):
     name = models.CharField(max_length=200)
@@ -51,35 +19,9 @@ class Photo(models.Model):
         return self.name
 
     @classmethod
-    def create_with_exif(cls, exiftool, filename, **kwargs):
-        """exiftool is an instance of exiftool that will be used for opening the given file and extracting the metadata. kwargs are passed to constructor after being updated with EXIF information."""
-
-        # Extract EXIF tags from file
-        tags = ["EXIF:DateTimeOriginal",
-                "EXIF:Make",
-                "EXIF:Model",
-                "Composite:LensID",
-                "Composite:Aperture",
-                "EXIF:FocalLength",
-                "Composite:ShutterSpeed",
-                "EXIF:ISO",
-                ]
-        metadata = exiftool.get_tags(tags, filename)
-
-        new_kwargs = {
-                'date_taken': _parse_datetime(metadata.get('EXIF:DateTimeOriginal', '')),
-                'make': metadata.get('EXIF:Make'),
-                'model': metadata.get('EXIF:Model'),
-                'lens': metadata.get('Composite:LensID'),
-                'aperture': _parse_decimal(metadata.get('Composite:Aperture')),
-                'focal_length': _parse_decimal(metadata.get('EXIF:FocalLength')),
-                'shutter_speed': _parse_float(metadata.get('Composite:ShutterSpeed')),
-                'iso': _parse_int(metadata.get('EXIF:ISO')),
-                }
-        for k, v in new_kwargs.items():
-            if v:
-                kwargs[k] = v
-
+    def create_with_exif(cls, exif_reader, filename, **kwargs):
+        """kwargs are passed to constructor after being updated with EXIF information."""
+        kwargs.update(exif_reader.tags(filename))
         return cls(**kwargs)
 
 class Album(models.Model):

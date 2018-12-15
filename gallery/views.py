@@ -8,6 +8,8 @@ from django.views import generic
 from .forms import PhotoUploadForm
 from .models import Photo
 
+from .exif_reader import ExifReader
+
 class IndexView(generic.ListView):
     template_name = 'gallery/index.html'
     #model = Photo
@@ -36,11 +38,12 @@ class PhotoUploadView(generic.FormView):
         print(f"Files {files}", file=sys.stderr)
         if form.is_valid():
             with exiftool.ExifTool() as et:
+                exif_reader = ExifReader(et)
                 for f in files:
                     # XXX this assumes that all files are instances of TemporaryUploadedFile.
                     # We therefore need to force all uploads to be written to disk.
                     filename = f.temporary_file_path()
-                    instance = Photo.create_with_exif(et, filename, original=f)
+                    instance = Photo.create_with_exif(exif_reader, filename, original=f)
                     print(f"Created {instance.__dict__}", file=sys.stderr)
                     instance.save()
             return self.form_valid(form)
