@@ -119,3 +119,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# Force all uploads to be written to disk. We need this for exiftool.
+# (XXX technically we could send the small in-memory uploads to exiftool's
+# stdin -- investigate!)
+FILE_UPLOAD_MAX_MEMORY_SIZE = 0

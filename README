@@ -1,0 +1,3 @@
+Don't forget:
+
+pip install --user git+https://github.com/smarnach/pyexiftool.git

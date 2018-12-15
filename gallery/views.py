@@ -1,3 +1,4 @@
+import exiftool
 import sys
 
 from django.urls import reverse_lazy
@@ -34,11 +35,14 @@ class PhotoUploadView(generic.FormView):
         files = request.FILES.getlist('file_field')
         print(f"Files {files}", file=sys.stderr)
         if form.is_valid():
-            for f in files:
-                # TODO Do something with each file.
-                instance = Photo(original=f)
-                print(f"Created {instance.__dict__}", file=sys.stderr)
-                instance.save()
+            with exiftool.ExifTool() as et:
+                for f in files:
+                    # XXX this assumes that all files are instances of TemporaryUploadedFile.
+                    # We therefore need to force all uploads to be written to disk.
+                    filename = f.temporary_file_path()
+                    instance = Photo.create_with_exif(et, filename, original=f)
+                    print(f"Created {instance.__dict__}", file=sys.stderr)
+                    instance.save()
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
