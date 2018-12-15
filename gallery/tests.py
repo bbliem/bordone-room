@@ -1,56 +1,68 @@
 from datetime import datetime, timezone
-from decimal import Decimal
 
 from django.test import TestCase
 
-from .models import Photo, _parse_datetime, _parse_decimal, _parse_float, _parse_int
+from .exif_reader import ExifReader
 
-class PhotoModelTests(TestCase):
-    def test_parse_datetime_none(self):
-        self.assertIs(_parse_datetime(None), None)
+class ExifReaderTests(TestCase):
+    metadata = {
+            'EXIF:DateTimeOriginal': '2018:12:15 03:47:23',
+            'EXIF:Make': 'Make X',
+            'EXIF:Model': 'Model Y',
+            'Composite:LensID': 'Lens Z',
+            'Composite:Aperture': 0.95,
+            'EXIF:FocalLength': 42.5,
+            'Composite:ShutterSpeed': 1.2,
+            'EXIF:ISO': 3200,
+            }
 
-    def test_parse_datetime_empty(self):
-        self.assertIs(_parse_datetime(''), None)
+    def setUp(self):
+        self.exif_reader = ExifReader(None)
 
-    def test_parse_datetime_seconds_missing(self):
-        self.assertIs(_parse_datetime('2018:12:15 03:47'), None)
+    def test_parse_date_taken_none(self):
+        value = self.exif_reader._field_readers['date_taken']({'EXIF:DateTimeOriginal': None})
+        self.assertIs(value, None)
 
-    def test_parse_datetime_valid(self):
-        date = datetime(2018, 12, 15, 3, 47, 23, 00, timezone.utc)
-        self.assertEqual(_parse_datetime('2018:12:15 03:47:23'), date)
+    def test_parse_date_taken_empty(self):
+        value = self.exif_reader._field_readers['date_taken']({'EXIF:DateTimeOriginal': ''})
+        self.assertIs(value, None)
 
-    def test_parse_decimal_none(self):
-        self.assertIs(_parse_decimal(None), None)
+    def test_parse_date_taken_seconds_missing(self):
+        value = self.exif_reader._field_readers['date_taken']({'EXIF:DateTimeOriginal': '2018:12:15 03:47'})
+        self.assertIs(value, None)
 
-    def test_parse_decimal_empty(self):
-        self.assertIs(_parse_decimal(''), None)
+    def test_parse_date_taken_valid(self):
+        value = self.exif_reader._field_readers['date_taken'](self.metadata)
+        self.assertEqual(value, datetime(2018, 12, 15, 3, 47, 23, 00, timezone.utc))
 
-    def test_parse_decimal_hex(self):
-        self.assertIs(_parse_decimal('0xdeadbeef'), None)
+    def test_make_valid(self):
+        value = self.exif_reader._field_readers['make'](self.metadata)
+        self.assertEqual(value, self.metadata['EXIF:Make'])
 
-    def test_parse_decimal_valid(self):
-        self.assertEqual(_parse_decimal('12.345'), Decimal('12.345'))
+    def test_model_valid(self):
+        value = self.exif_reader._field_readers['model'](self.metadata)
+        self.assertEqual(value, self.metadata['EXIF:Model'])
 
-    def test_parse_float_none(self):
-        self.assertIs(_parse_float(None), None)
+    def test_lens_valid(self):
+        value = self.exif_reader._field_readers['lens'](self.metadata)
+        self.assertEqual(value, self.metadata['Composite:LensID'])
 
-    def test_parse_float_empty(self):
-        self.assertIs(_parse_float(''), None)
+    def test_aperture_none(self):
+        value = self.exif_reader._field_readers['aperture']({'Composite:Aperture': None})
+        self.assertIs(value, None)
 
-    def test_parse_float_hex(self):
-        self.assertIs(_parse_float('0xdeadbeef'), None)
+    def test_aperture_valid(self):
+        value = self.exif_reader._field_readers['aperture'](self.metadata)
+        self.assertEqual(value, self.metadata['Composite:Aperture'])
 
-    def test_parse_float_valid(self):
-        self.assertEqual(_parse_float('0.5'), 0.5)
+    def test_iso_none(self):
+        value = self.exif_reader._field_readers['iso']({'EXIF:ISO': None})
+        self.assertIs(value, None)
 
-    def test_parse_int_none(self):
-        self.assertIs(_parse_int(None), None)
+    def test_iso_float(self):
+        value = self.exif_reader._field_readers['iso']({'EXIF:ISO': 100.1})
+        self.assertIs(value, 100)
 
-    def test_parse_int_empty(self):
-        self.assertIs(_parse_int(''), None)
-
-    def test_parse_int_float(self):
-        self.assertIs(_parse_int('0.5'), None)
-
-    def test_parse_int_valid(self):
-        self.assertEqual(_parse_int('05'), 5)
+    def test_iso_valid(self):
+        value = self.exif_reader._field_readers['iso'](self.metadata)
+        self.assertEqual(value, self.metadata['EXIF:ISO'])
