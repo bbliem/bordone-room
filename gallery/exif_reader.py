@@ -1,5 +1,4 @@
 from datetime import datetime
-from decimal import Decimal, InvalidOperation
 import pytz
 
 import logging
@@ -15,13 +14,6 @@ def _parse_datetime(s):
         # XXX use UTC as EXIF has no information on time zones
         return dto.replace(tzinfo=pytz.UTC)
     except (ValueError, TypeError):
-        return None
-
-def _parse_decimal(s):
-    try:
-        print(f"String: {type(s)}; Decimal: {Decimal(s)}")
-        return Decimal(s)
-    except (TypeError, InvalidOperation):
         return None
 
 def _parse_float(s):
@@ -55,8 +47,8 @@ class ExifReader:
             'make': lambda m: m.get('EXIF:Make'),
             'model': lambda m: m.get('EXIF:Model'),
             'lens': lambda m: m.get('Composite:LensID'),
-            'aperture': lambda m: _parse_decimal(m.get('Composite:Aperture')),
-            'focal_length': lambda m: _parse_decimal(m.get('EXIF:FocalLength')),
+            'aperture': lambda m: _parse_float(m.get('Composite:Aperture')),
+            'focal_length': lambda m: _parse_float(m.get('EXIF:FocalLength')),
             'shutter_speed': lambda m: _parse_float(m.get('Composite:ShutterSpeed')),
             'iso': lambda m: _parse_int(m.get('EXIF:ISO')),
             }

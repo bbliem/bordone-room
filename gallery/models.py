@@ -10,8 +10,8 @@ class Photo(models.Model):
     make = models.CharField(max_length=200) # camera producer
     model = models.CharField(max_length=200) # camera model
     lens = models.CharField(max_length=200)
-    aperture = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True)
-    focal_length = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    aperture = models.FloatField(blank=True, null=True)
+    focal_length = models.FloatField(blank=True, null=True)
     shutter_speed = models.FloatField(blank=True, null=True)
     iso = models.IntegerField(blank=True, null=True)
 
