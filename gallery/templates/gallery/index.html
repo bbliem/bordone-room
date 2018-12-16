@@ -1,17 +1,39 @@
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'gallery/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'gallery/justifiedGallery.min.css' %}">
+<script type="text/javascript" src="{% static 'gallery/jquery-3.3.1.min.js'%}"></script>
+<script type="text/javascript" src="{% static 'gallery/jquery.justifiedGallery.min.js'%}"></script>
 
 {% if photo_list %}
-    <ul>
+  <div id="gallery">
     {% for photo in photo_list %}
-        <!--<li><a href="/gallery/photo/{{ photo.id }}/">{{ photo.name }}</a></li>-->
-        <li><a href="{% url 'gallery:view_photo' photo.id %}">{{ photo.name }}</a></li>
+      <!--<li><a href="/gallery/photo/{{ photo.id }}/">{{ photo.name }}</a></li>-->
+      <!--<li><a href="{% url 'gallery:view_photo' photo.id %}">{{ photo.name }}</a></li>-->
+      <a href="{% url 'gallery:view_photo' photo.id %}">
+        <img alt="{{ photo.name }}" src="{{ photo.thumbnail_320.url }}">
+      </a>
     {% endfor %}
-    </ul>
+  </div>
 {% else %}
-    <p>There are no photos.</p>
+  <p>There are no photos.</p>
 {% endif %}
+
+<script type="text/javascript">
+  $('#gallery').justifiedGallery();
+
+/*
+  $("#gallery").justifiedGallery({
+    thumbnailPath: function (currentPath, width, height, image) {
+      if (Math.max(width, height) < 250) {
+        return currentPath.replace(/(.*)(_[a-z]+)(\..*)/, "$1_small$2");
+      } else {
+        return currentPath.replace(/(.*)(_[a-z]+)(\..*)/, "$1_medium$2");
+      }
+    }
+  });
+*/
+</script>
 
 <p>Upload</p>
 <form enctype="multipart/form-data" method="post" action="{% url 'gallery:upload_photos' %}">

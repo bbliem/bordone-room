@@ -143,5 +143,7 @@ LOGGING = {
             },
         }
 
-CURRENT_DIR = os.path.dirname(__file__)
-MEDIA_ROOT = os.path.join(CURRENT_DIR, 'media')
+#CURRENT_DIR = os.path.dirname(__file__)
+#MEDIA_ROOT = os.path.join(CURRENT_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
