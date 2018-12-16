@@ -3,6 +3,8 @@ import os
 import secrets
 
 from django.db import models
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFit
 
 def original_path(photo, filename):
     today = date.today()
@@ -18,12 +20,28 @@ def original_path(photo, filename):
 
     return f'{today.year}/{today.month}/{today.day}/{base}_{secret}_o{extension}'
 
+class ThumbnailField(ImageSpecField):
+    def __init__(self, source, size):
+        super().__init__(source=source,
+                         format='JPEG',
+                         options={'quality': 90},
+                         processors=[ResizeToFit(size, size)],
+                         )
+
 class Photo(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
     num_views = models.IntegerField('number of views', default=0)
-    original = models.ImageField(upload_to=original_path)
     upload_date = models.DateTimeField(auto_now_add=True)
+    original = models.ImageField(upload_to=original_path)
+
+    # Thumbnails
+    thumbnail_320 = ThumbnailField('original', 320)
+    thumbnail_500 = ThumbnailField('original', 500)
+    thumbnail_640 = ThumbnailField('original', 640)
+    thumbnail_800 = ThumbnailField('original', 800)
+    thumbnail_1024 = ThumbnailField('original', 1024)
+
     # Metadata
     date_taken = models.DateTimeField(blank=True, null=True)
     make = models.CharField(max_length=200) # camera producer
