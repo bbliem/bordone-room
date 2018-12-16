@@ -1,10 +1,28 @@
+from datetime import date
+import os
+import secrets
+
 from django.db import models
+
+def original_path(photo, filename):
+    today = date.today()
+    # Add secret to filename in order to avoid guessing the names of photos
+    # without viewing permission
+    secret = secrets.token_urlsafe(8)
+    base, extension = os.path.splitext(filename)
+    base = base[:80] # crop to 80 characters
+
+    # valid_chars = f'-_.() {string.ascii_letters}{string.digits}'
+    # base = ''.join(c for c in base if c in valid_chars)
+    # base = base.replace(' ','_')
+
+    return f'{today.year}/{today.month}/{today.day}/{base}_{secret}_o{extension}'
 
 class Photo(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
     num_views = models.IntegerField('number of views', default=0)
-    original = models.ImageField(upload_to='%Y/%m/%d')
+    original = models.ImageField(upload_to=original_path)
     upload_date = models.DateTimeField(auto_now_add=True)
     # Metadata
     date_taken = models.DateTimeField(blank=True, null=True)
