@@ -34,9 +34,10 @@ class PhotoUploadView(generic.FormView):
     def post(self, request, *args, **kwargs):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
-        files = request.FILES.getlist('file_field')
-        print(f"Files {files}", file=sys.stderr)
         if form.is_valid():
+            files = request.FILES.getlist('file_field')
+            print(f"Files {files}", file=sys.stderr)
+
             with exiftool.ExifTool() as et:
                 exif_reader = ExifReader(et)
                 for f in files:
