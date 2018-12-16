@@ -5,6 +5,7 @@ class Photo(models.Model):
     description = models.TextField()
     num_views = models.IntegerField('number of views', default=0)
     original = models.ImageField(upload_to='%Y/%m/%d')
+    upload_date = models.DateTimeField(auto_now_add=True)
     # Metadata
     date_taken = models.DateTimeField(blank=True, null=True)
     make = models.CharField(max_length=200) # camera producer
