@@ -138,7 +138,7 @@ LOGGING = {
         'loggers': {
             'gallery': {
                 'handlers': ['console'],
-                'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+                'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
                 },
             },
         }
@@ -149,3 +149,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 IMAGEKIT_SPEC_CACHEFILE_NAMER='gallery.namers.source_name_as_path'
+
+# The first size will be the default preview size
+GALLERY_THUMBNAIL_SIZES = [240, 320, 500, 640, 800, 1024]

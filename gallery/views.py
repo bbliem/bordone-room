@@ -1,14 +1,14 @@
 import exiftool
 import sys
 
+from django.conf import settings
 from django.urls import reverse_lazy
 from django.http import Http404, HttpResponseRedirect
 from django.views import generic
 
+from .exif_reader import ExifReader
 from .forms import PhotoUploadForm
 from .models import Photo
-
-from .exif_reader import ExifReader
 
 class IndexView(generic.ListView):
     template_name = 'gallery/index.html'
@@ -17,18 +17,13 @@ class IndexView(generic.ListView):
     def get_queryset(self):
         """Return the last couple of photos."""
         #return Photo.objects.order_by('-date_taken')[:2]
-        queryset = Photo.objects.order_by('-date_taken')
+        return Photo.objects.order_by('-date_taken')
 
-        # Generate thumbnails
-        # TODO Make this more maintainable
-        for photo in queryset:
-            photo.thumbnail_320.generate()
-            photo.thumbnail_500.generate()
-            photo.thumbnail_640.generate()
-            photo.thumbnail_800.generate()
-            photo.thumbnail_1024.generate()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['thumbnail_sizes'] = settings.GALLERY_THUMBNAIL_SIZES
+        return context
 
-        return queryset
 
 class PhotoView(generic.DetailView):
     model = Photo

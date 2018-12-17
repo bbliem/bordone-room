@@ -1,10 +1,15 @@
 from datetime import date
+import logging
+
 import os
 import secrets
 
+from django.conf import settings
 from django.db import models
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit
+
+log = logging.getLogger(__name__)
 
 def original_path(photo, filename):
     today = date.today()
@@ -37,11 +42,8 @@ class Photo(models.Model):
     original = models.ImageField(upload_to=original_path)
 
     # Thumbnails
-    thumbnail_320 = ThumbnailField('original', 320)
-    thumbnail_500 = ThumbnailField('original', 500)
-    thumbnail_640 = ThumbnailField('original', 640)
-    thumbnail_800 = ThumbnailField('original', 800)
-    thumbnail_1024 = ThumbnailField('original', 1024)
+    for size in settings.GALLERY_THUMBNAIL_SIZES:
+        vars()[f'thumbnail_{size}'] = ThumbnailField('original', size)
 
     # Metadata
     date_taken = models.DateTimeField(blank=True, null=True)
@@ -61,6 +63,22 @@ class Photo(models.Model):
         """kwargs are passed to constructor after being updated with EXIF information."""
         kwargs.update(exif_reader.tags(filename))
         return cls(**kwargs)
+
+    def thumbnail(self, size=settings.GALLERY_THUMBNAIL_SIZES[0]):
+        assert size in settings.GALLERY_THUMBNAIL_SIZES
+        return getattr(self, f'thumbnail_{size}')
+
+    def generate_thumbnails(self):
+        log.debug(f"Generating thumbnails for photo {self.original}")
+        for size in settings.GALLERY_THUMBNAIL_SIZES:
+            self.thumbnail(size).generate()
+
+    def delete_files(self):
+        log.debug(f"Deleting files for photo {self.original}")
+        self.original.storage.delete(self.original.path)
+        for size in settings.GALLERY_THUMBNAIL_SIZES:
+            t = self.thumbnail(size)
+            t.storage.delete(t.path)
 
 class Album(models.Model):
     title = models.CharField(max_length=200)
