@@ -147,3 +147,5 @@ LOGGING = {
 #MEDIA_ROOT = os.path.join(CURRENT_DIR, 'media')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+IMAGEKIT_SPEC_CACHEFILE_NAMER='gallery.namers.source_name_as_path'

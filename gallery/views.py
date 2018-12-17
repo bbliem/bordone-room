@@ -17,7 +17,18 @@ class IndexView(generic.ListView):
     def get_queryset(self):
         """Return the last couple of photos."""
         #return Photo.objects.order_by('-date_taken')[:2]
-        return Photo.objects.order_by('-date_taken')
+        queryset = Photo.objects.order_by('-date_taken')
+
+        # Generate thumbnails
+        # TODO Make this more maintainable
+        for photo in queryset:
+            photo.thumbnail_320.generate()
+            photo.thumbnail_500.generate()
+            photo.thumbnail_640.generate()
+            photo.thumbnail_800.generate()
+            photo.thumbnail_1024.generate()
+
+        return queryset
 
 class PhotoView(generic.DetailView):
     model = Photo

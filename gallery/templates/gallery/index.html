@@ -20,7 +20,17 @@
 {% endif %}
 
 <script type="text/javascript">
-  $('#gallery').justifiedGallery();
+  $('#gallery').justifiedGallery({
+    sizeRangeSuffixes: {
+      320: '_320',
+      500: '_500',
+      640: '_640',
+      800: '_800',
+      1024: '_1024'
+    },
+
+    rowHeight: 320
+  });
 
 /*
   $("#gallery").justifiedGallery({

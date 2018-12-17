@@ -24,7 +24,8 @@ class ThumbnailField(ImageSpecField):
     def __init__(self, source, size):
         super().__init__(source=source,
                          format='JPEG',
-                         options={'quality': 90},
+                         options={'quality': 90,
+                                  'suffix': str(size)},
                          processors=[ResizeToFit(size, size)],
                          )
 
