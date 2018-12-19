@@ -1,10 +1,6 @@
-{% load static %}
+{% extends "gallery/base.html" %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'gallery/style.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'gallery/justifiedGallery.min.css' %}">
-<script type="text/javascript" src="{% static 'gallery/jquery-3.3.1.min.js'%}"></script>
-<script type="text/javascript" src="{% static 'gallery/jquery.justifiedGallery.min.js'%}"></script>
-
+{% block content %}
 {% if photo_list %}
   <div id="gallery">
     {% for photo in photo_list %}
@@ -15,30 +11,31 @@
       </a>
     {% endfor %}
   </div>
+
+  <script type="text/javascript">
+    $('#gallery').justifiedGallery({
+      sizeRangeSuffixes: {
+        {% for size in thumbnail_sizes %}{{ size }}: '_{{ size }}', {% endfor %}
+      },
+      rowHeight: {{ thumbnail_sizes.0 }},
+    });
+
+  /*
+    $("#gallery").justifiedGallery({
+      thumbnailPath: function (currentPath, width, height, image) {
+        if (Math.max(width, height) < 250) {
+          return currentPath.replace(/(.*)(_[a-z]+)(\..*)/, "$1_small$2");
+        } else {
+          return currentPath.replace(/(.*)(_[a-z]+)(\..*)/, "$1_medium$2");
+        }
+      }
+    });
+  */
+  </script>
+
 {% else %}
   <p>There are no photos.</p>
 {% endif %}
-
-<script type="text/javascript">
-  $('#gallery').justifiedGallery({
-    sizeRangeSuffixes: {
-      {% for size in thumbnail_sizes %}{{ size }}: '_{{ size }}', {% endfor %}
-    },
-    rowHeight: {{ thumbnail_sizes.0 }},
-  });
-
-/*
-  $("#gallery").justifiedGallery({
-    thumbnailPath: function (currentPath, width, height, image) {
-      if (Math.max(width, height) < 250) {
-        return currentPath.replace(/(.*)(_[a-z]+)(\..*)/, "$1_small$2");
-      } else {
-        return currentPath.replace(/(.*)(_[a-z]+)(\..*)/, "$1_medium$2");
-      }
-    }
-  });
-*/
-</script>
 
 <p>Upload</p>
 <form enctype="multipart/form-data" method="post" action="{% url 'gallery:upload_photos' %}">
@@ -47,3 +44,5 @@
   <!--<input type="file" name="photos" multiple>-->
   <input type="submit" value="Upload">
 </form>
+
+{% endblock %}
