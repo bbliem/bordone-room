@@ -1,4 +1,7 @@
 {% load static %}
+{% load custom_tags %}
+{% url 'gallery:photo_list' as photo_list_url %}
+{% url 'gallery:album_list' as album_list_url %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,6 +13,13 @@
 <script type="text/javascript" src="{% static 'gallery/jquery.justifiedGallery.min.js'%}"></script>
 </head>
 <body>
+
+<nav>
+  <ul>
+    <li><a class="{% active request photo_list_url %}" href="{{ photo_list_url }}">Photos</a></li>
+    <li><a class="{% active request album_list_url %}" href="{{ album_list_url }}">Albums</a></li>
+  </ul>
+</nav>
 
 {% block content %}
 {% endblock %}

@@ -34,6 +34,9 @@ class PhotoDetailView(generic.DetailView):
     template_name = 'gallery/view_photo.html'
 
 
+def list_albums(request):
+    raise Http404("TODO")
+
 def view_album(request, album_id):
     raise Http404("TODO")
 

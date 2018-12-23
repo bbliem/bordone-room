@@ -11,5 +11,6 @@ urlpatterns = [
     path('photos/', views.PhotoListView.as_view(), name='photo_list'),
     path('photos/<int:pk>/', views.PhotoDetailView.as_view(),
          name='photo_detail'),
+    path('albums/', views.list_albums, name='album_list'),
     path('albums/<int:pk>/', views.view_album, name='album_detail'),
 ]
