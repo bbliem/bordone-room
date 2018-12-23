@@ -21,6 +21,7 @@ class IndexView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['form'] = PhotoUploadForm()
         context['thumbnail_sizes'] = settings.GALLERY_THUMBNAIL_SIZES
         return context
 
@@ -29,8 +30,10 @@ class PhotoView(generic.DetailView):
     model = Photo
     template_name = 'gallery/view_photo.html'
 
+
 def view_album(request, album_id):
     raise Http404("TODO")
+
 
 class PhotoUploadView(generic.FormView):
     form_class = PhotoUploadForm

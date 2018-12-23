@@ -47,9 +47,9 @@ class Photo(models.Model):
 
     # Metadata
     date_taken = models.DateTimeField(blank=True, null=True)
-    make = models.CharField(max_length=200) # camera producer
-    model = models.CharField(max_length=200) # camera model
-    lens = models.CharField(max_length=200)
+    make = models.CharField(max_length=200, default='') # camera producer
+    model = models.CharField(max_length=200, default='') # camera model
+    lens = models.CharField(max_length=200, default='')
     aperture = models.FloatField(blank=True, null=True)
     focal_length = models.FloatField(blank=True, null=True)
     shutter_speed = models.FloatField(blank=True, null=True)

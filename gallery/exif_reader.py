@@ -58,9 +58,10 @@ class ExifReader:
         self.exiftool = exiftool
 
     def tags(self, filename):
-        """Return relevant EXIF tags as a dict."""
+        """Return a dict of relevant EXIF tags found in the file."""
         metadata = self.exiftool.get_tags(self._relevant_tags, filename)
         log.info(f"Read EXIF metadata from '{filename}':\n{pformat(metadata)}")
-        result = {field: parser(metadata) for field, parser in self._field_readers.items()}
+        # Map each field name to the parsed value if it exists
+        result = {f: p(metadata) for f, p in self._field_readers.items() if p(metadata)}
         log.info(f"Parsed EXIF metadata from '{filename}':\n{pformat(result)}")
         return result
