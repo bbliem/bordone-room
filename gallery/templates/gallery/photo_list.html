@@ -1,0 +1,30 @@
+{% extends "gallery/base.html" %}
+
+{% block content %}
+<section>
+  <h1>Photos</h1>
+  {% if photo_list %}
+    <div id="gallery">
+      {% for photo in photo_list %}
+        <a href="{% url 'gallery:photo_detail' photo.id %}">
+          <img alt="{{ photo.name }}" src="{{ photo.thumbnail.url }}">
+        </a>
+      {% endfor %}
+    </div>
+    {% include "gallery/justified_gallery_script.html" %}
+  {% else %}
+    <p>There are no photos.</p>
+  {% endif %}
+</section>
+
+<section>
+  <h1>Upload</h1>
+  <form enctype="multipart/form-data" method="post" action="{% url 'gallery:photo_list' %}">
+    {% csrf_token %}
+    {{ form }}
+    <!--<input type="file" name="photos" multiple>-->
+    <input type="submit" value="Upload">
+  </form>
+</section>
+
+{% endblock %}

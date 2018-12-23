@@ -86,6 +86,7 @@ class Album(models.Model):
     cover_photo = models.ForeignKey(Photo, null=True, on_delete=models.SET_NULL, related_name='+') # TODO enforce that it's in this album? Avoid NULL values?
     num_views = models.IntegerField('number of views', default=0)
     photos = models.ManyToManyField(Photo)
+    creation_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title

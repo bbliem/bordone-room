@@ -7,11 +7,11 @@ from django.http import Http404, HttpResponseRedirect
 from django.views import generic
 
 from .exif_reader import ExifReader
-from .forms import PhotoUploadForm
-from .models import Photo
+from .forms import AlbumCreateForm, PhotoUploadForm
+from .models import Album, Photo
 
 class PhotoListView(generic.ListView):
-    template_name = 'gallery/index.html'
+    template_name = 'gallery/photo_list.html'
     #model = Photo
 
     def get_queryset(self):
@@ -31,19 +31,11 @@ class PhotoListView(generic.ListView):
 
 class PhotoDetailView(generic.DetailView):
     model = Photo
-    template_name = 'gallery/view_photo.html'
-
-
-def list_albums(request):
-    raise Http404("TODO")
-
-def view_album(request, album_id):
-    raise Http404("TODO")
+    template_name = 'gallery/photo_detail.html'
 
 
 class PhotoUploadView(generic.FormView):
     form_class = PhotoUploadForm
-    template_name = 'gallery/index.html'
     success_url = reverse_lazy('gallery:index')
 
     def post(self, request, *args, **kwargs):
@@ -65,3 +57,31 @@ class PhotoUploadView(generic.FormView):
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
+
+
+class AlbumListView(generic.ListView):
+    template_name = 'gallery/album_list.html'
+    model = Album
+
+    def get_queryset(self):
+        return Album.objects.order_by('-creation_date')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = AlbumCreateForm()
+        context['thumbnail_sizes'] = settings.GALLERY_THUMBNAIL_SIZES
+        return context
+
+    def post(self, request, *args, **kwargs):
+        return AlbumCreateView.as_view()(request, args, kwargs)
+
+
+class AlbumCreateView(generic.CreateView):
+    form_class = AlbumCreateForm
+    model = Album
+    success_url = reverse_lazy('gallery:album_list')
+
+
+class AlbumDetailView(generic.DetailView):
+    model = Album
+    template_name = 'gallery/album_detail.html'
