@@ -5,8 +5,8 @@
   <div id="gallery">
     {% for photo in photo_list %}
       <!--<li><a href="/gallery/photo/{{ photo.id }}/">{{ photo.name }}</a></li>-->
-      <!--<li><a href="{% url 'gallery:view_photo' photo.id %}">{{ photo.name }}</a></li>-->
-      <a href="{% url 'gallery:view_photo' photo.id %}">
+      <!--<li><a href="{% url 'gallery:photo_detail' photo.id %}">{{ photo.name }}</a></li>-->
+      <a href="{% url 'gallery:photo_detail' photo.id %}">
         <img alt="{{ photo.name }}" src="{{ photo.thumbnail.url }}">
       </a>
     {% endfor %}
@@ -38,7 +38,7 @@
 {% endif %}
 
 <p>Upload</p>
-<form enctype="multipart/form-data" method="post" action="{% url 'gallery:upload_photos' %}">
+<form enctype="multipart/form-data" method="post" action="{% url 'gallery:photo_list' %}">
   {% csrf_token %}
   {{ form }}
   <!--<input type="file" name="photos" multiple>-->

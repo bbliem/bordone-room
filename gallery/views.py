@@ -10,7 +10,7 @@ from .exif_reader import ExifReader
 from .forms import PhotoUploadForm
 from .models import Photo
 
-class IndexView(generic.ListView):
+class PhotoListView(generic.ListView):
     template_name = 'gallery/index.html'
     #model = Photo
 
@@ -25,8 +25,11 @@ class IndexView(generic.ListView):
         context['thumbnail_sizes'] = settings.GALLERY_THUMBNAIL_SIZES
         return context
 
+    def post(self, request, *args, **kwargs):
+        return PhotoUploadView.as_view()(request, args, kwargs)
 
-class PhotoView(generic.DetailView):
+
+class PhotoDetailView(generic.DetailView):
     model = Photo
     template_name = 'gallery/view_photo.html'
 
