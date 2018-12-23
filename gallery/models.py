@@ -23,7 +23,7 @@ def original_path(photo, filename):
     # base = ''.join(c for c in base if c in valid_chars)
     # base = base.replace(' ','_')
 
-    return f'{today.year}/{today.month}/{today.day}/{base}_{secret}_o{extension}'
+    return f'{today.year}/{today.month}/{today.day}/{base}_{secret}{extension}'
 
 class ThumbnailField(ImageSpecField):
     def __init__(self, source, size):

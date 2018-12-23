@@ -22,13 +22,10 @@ def source_name_as_path(generator):
         basename = os.path.basename(generator.source.name)
         basename_root = os.path.splitext(basename)[0]
 
-        if not basename_root.endswith('_o'):
-            raise Exception(f"Expected basename to end with '_o' for {source_filename}.")
-
         if not isinstance(generator.options.get('suffix'), str):
             raise Exception(f"You must supply a 'suffix' option to ImageKit fields.")
 
-        new_basename_root = basename_root[:-2] + '_' + generator.options.get('suffix')
+        new_basename_root = basename_root + '_' + generator.options.get('suffix')
 
     ext = suggest_extension(source_filename or '', generator.format)
     return os.path.normpath(os.path.join(dir, '%s%s' % (new_basename_root, ext)))
