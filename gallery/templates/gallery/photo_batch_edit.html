@@ -1,5 +1,6 @@
 {% extends "gallery/base.html" %}
 
+{% load static %}
 {% load widget_tweaks %}
 
 {% block header %}
@@ -20,9 +21,19 @@
       });
     </script>
 
-    {{ form.albums_field }}
+    <div class="sidebar">
+      {% render_field form.albums_field size="8" %}
 
-    <input type="submit" value="Perform changes">
+      <input type="submit" value="Perform changes">
+
+      <div id="dialog-override" title="Override albums?" style="display: none">
+        <p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>
+        The selected photos are in different albums.
+        Do you want to put all of them in the selected albums instead?</p>
+      </div>
+
+      <script type="text/javascript" src="{% static 'gallery/photo_batch_edit.js'%}"></script>
+    </div>
   </form>
 </section>
 
