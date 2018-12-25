@@ -2,10 +2,12 @@
 
 {% load static %}
 {% load widget_tweaks %}
+{% load custom_tags %}
 
 {% block header %}
 {{ block.super }}
-{% include "gallery/image_picker_header.html" %}
+{# include "gallery/image_picker_header.html" #}
+{% include "gallery/justified_gallery_header.html" %}
 {% endblock %}
 
 {% block content %}
@@ -14,24 +16,35 @@
   <form method="post" action="{% url 'gallery:photo_batch_edit' %}">
     {% csrf_token %}
 
+    <!--
     {% render_field form.photos_field class+="image-picker" %}
     <script type="text/javascript">
       $("select").imagepicker({
         show_label: true,
       });
     </script>
+    -->
+    {% render_field form.photos_field style+="display: none;" %}
+    <div id="gallery">
+      {% for photo in form.photos_field.field.queryset %}
+        <div class="image-container">
+          <img alt="{{ photo.name }}" src="{{ photo.thumbnail.url }}"
+               data-albums="[{{ photo.album_set|sort_by:'id'|key_to_list:'id'|join:',' }}]">
+        </div>
+      {% endfor %}
+    </div>
+    {% include "gallery/justified_gallery_script.html" %}
+
+    <script type="text/javascript">
+      $('#gallery').justifiedGallery({
+        rowHeight: 120,
+        margins: 12,
+      });
+    </script>
 
     <div class="sidebar">
       {% render_field form.albums_field size="8" %}
-
       <input type="submit" value="Perform changes">
-
-      <div id="dialog-override" title="Override albums?" style="display: none">
-        <p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>
-        The selected photos are in different albums.
-        Do you want to put all of them in the selected albums instead?</p>
-      </div>
-
       <script type="text/javascript" src="{% static 'gallery/photo_batch_edit.js'%}"></script>
     </div>
   </form>

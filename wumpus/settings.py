@@ -40,9 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'imagekit',
     'widget_tweaks',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -154,3 +156,5 @@ IMAGEKIT_SPEC_CACHEFILE_NAMER = 'gallery.namers.source_name_as_path'
 
 # The first size will be the default preview size
 GALLERY_THUMBNAIL_SIZES = [240, 320, 500, 640, 800, 1024]
+
+INTERNAL_IPS = ['127.0.0.1'] # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html

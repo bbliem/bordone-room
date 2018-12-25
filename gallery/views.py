@@ -96,6 +96,12 @@ class PhotoBatchEditView(generic.FormView):
     form_class = PhotoBatchEditForm
     success_url = reverse_lazy('gallery:index')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # TODO the following occurs many times -- refactor
+        context['thumbnail_sizes'] = settings.GALLERY_THUMBNAIL_SIZES
+        return context
+
     def form_valid(self, form):
         albums = form.cleaned_data['albums_field']
         for photo in form.cleaned_data['photos_field']:

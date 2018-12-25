@@ -41,4 +41,18 @@ nav {
 
 .main {
   padding-top: 50px;
+  margin-right: 160px;
+}
+
+.jg-entry.ui-selecting, .jg-entry.ui-selected {
+  outline-color: rgb(74, 144, 217);
+  outline-width: 5px;
+  outline-style: solid;
+}
+
+.ui-selectable-helper {
+  position: absolute;
+  z-index: 100;
+  border: 3px dotted rgb(74, 144, 217);
+  background-color: rgba(74, 144, 217, 0.5);
 }
