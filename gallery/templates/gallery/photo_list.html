@@ -1,5 +1,10 @@
 {% extends "gallery/base.html" %}
 
+{% block header %}
+{{ block.super }}
+{% include "gallery/justified_gallery_header.html" %}
+{% endblock %}
+
 {% block content %}
 <section>
   <h1>Photos</h1>

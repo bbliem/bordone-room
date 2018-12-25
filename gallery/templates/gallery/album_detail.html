@@ -1,7 +1,25 @@
 {% extends "gallery/base.html" %}
 
+{% block header %}
+{{ block.super }}
+{% include "gallery/justified_gallery_header.html" %}
+{% endblock %}
+
 {% block content %}
-<h1>{{ album.title }}</h1>
-<p>{{ album.description }}</p>
-<p>TODO: List the photos...</p>
+<section>
+  <h1>{{ album.title }}</h1>
+  <p>{{ album.description }}</p>
+  {% if album.photos %}
+    <div id="gallery">
+      {% for photo in album.photos.all %}
+        <a href="{% url 'gallery:photo_detail' photo.id %}">
+          <img alt="{{ photo.name }}" src="{{ photo.thumbnail.url }}">
+        </a>
+      {% endfor %}
+    </div>
+    {% include "gallery/justified_gallery_script.html" %}
+  {% else %}
+    <p>There are no photos.</p>
+  {% endif %}
+</section>
 {% endblock %}

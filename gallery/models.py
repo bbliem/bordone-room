@@ -1,6 +1,5 @@
 from datetime import date
 import logging
-
 import os
 import secrets
 
@@ -56,7 +55,7 @@ class Photo(models.Model):
     iso = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return f'[untitled photo {self.id}]'
 
     @classmethod
     def create_with_exif(cls, exif_reader, filename, **kwargs):

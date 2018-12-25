@@ -1,0 +1,29 @@
+{% extends "gallery/base.html" %}
+
+{% load widget_tweaks %}
+
+{% block header %}
+{{ block.super }}
+{% include "gallery/image_picker_header.html" %}
+{% endblock %}
+
+{% block content %}
+<section>
+  <h1>Photos</h1>
+  <form method="post" action="{% url 'gallery:photo_batch_edit' %}">
+    {% csrf_token %}
+
+    {% render_field form.photos_field class+="image-picker" %}
+    <script type="text/javascript">
+      $("select").imagepicker({
+        show_label: true,
+      });
+    </script>
+
+    {{ form.albums_field }}
+
+    <input type="submit" value="Perform changes">
+  </form>
+</section>
+
+{% endblock %}
