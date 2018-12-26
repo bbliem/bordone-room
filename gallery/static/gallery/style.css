@@ -23,25 +23,24 @@ nav {
   z-index: 2;
 }
 
-.sidebar {
+#edit-sidebar {
   height: 100%; /* Full-height: remove this if you want "auto" height */
-  width: 160px; /* Set the width of the sidebar */
+  width: 300px; /* Set the width of the sidebar */
   position: fixed; /* Fixed Sidebar (stay in place on scroll) */
   z-index: 1;
-  top: 0; /* Stay at the top */
+  top: 0;
   right: 0;
   overflow-x: hidden; /* Disable horizontal scroll */
   padding: 10px;
   padding-top: 100px;
 }
 
-.sidebar > * {
+#edit-sidebar > * {
   width: 100%;
 }
 
-.main {
+#main {
   padding-top: 50px;
-  margin-right: 160px;
 }
 
 .jg-entry.ui-selecting, .jg-entry.ui-selected {

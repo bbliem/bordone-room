@@ -1,4 +1,5 @@
 {% extends "gallery/base.html" %}
+{% load custom_tags %}
 
 {% block header %}
 {{ block.super }}
@@ -12,7 +13,8 @@
     <div id="gallery">
       {% for photo in photo_list %}
         <a href="{% url 'gallery:photo_detail' photo.id %}">
-          <img alt="{{ photo.name }}" src="{{ photo.thumbnail.url }}">
+          <img alt="{{ photo.name }}" src="{{ photo.thumbnail.url }}"
+               data-albums="[{{ photo.album_set|sort_by:'id'|key_to_list:'id'|join:',' }}]">
         </a>
       {% endfor %}
     </div>
@@ -32,4 +34,76 @@
   </form>
 </section>
 
+<div id="edit-sidebar" style="display: none">
+  <select id="select_albums" multiple>
+    <option value="1">TODO</option>
+  </select>
+</div>
+
+<script>
+// TODO put this stuff in JS source file, eventually get rid of photo_batch_edit.js
+function editSidebarOpen() {
+  $("#main").css("margin-right", $("#edit-sidebar").outerWidth());
+  $("#edit-sidebar").css("display", "block");
+  $("#open-edit-sidebar").css("display", "none");
+
+  // TODO XHR to get list of all albums
+  var albumsSelector = $("#select_albums");
+  var photosInSameAlbums = true;
+
+  $('#gallery').justifiedGallery({
+    rowHeight: 120,
+    margins: 12,
+  }).selectable({
+    stop: function() {
+      //var selectedPhotos = $("#id_photos_field option:selected");
+      var selectedPhotos = $(".ui-selected > img");
+
+      if(selectedPhotos.length === 0) {
+        albumsSelector.val([]);
+        albumsSelector.prop("disabled", true);
+        return;
+      }
+      albumsSelector.prop("disabled", false);
+
+      // Check if all selected photos are in the same albums.
+      photosInSameAlbums = true;
+      var firstAlbumList;
+      selectedPhotos.each(function(i, element) {
+        var thisAlbumList = $(this).attr("data-albums"); // attr instead of data to avoid conversion to array
+        if(i == 0) {
+          firstAlbumList = thisAlbumList;
+          console.log(firstAlbumList);
+        }
+        else {
+          if(thisAlbumList !== firstAlbumList) {
+            photosInSameAlbums = false;
+            return false; // break
+          }
+        }
+      });
+
+      if(photosInSameAlbums) {
+        // Select the (equal) albums of selected photos in the album picker.
+        albumsSelector.val(JSON.parse(firstAlbumList));
+      }
+      else {
+        albumsSelector.val([]);
+      }
+    }
+  });
+}
+
+function editSidebarClose() {
+  $("#main").css("margin-right", "0");
+  $("#edit-sidebar").css("display", "none");
+  $("#open-edit-sidebar").css("display", "inline-block");
+
+  $('#gallery').justifiedGallery({
+    rowHeight: {{ thumbnail_sizes.0 }},
+    margins: 3,
+  });
+}
+</script>
+<button id="open-edit-sidebar" onclick="editSidebarOpen()">&#9776;</button>
 {% endblock %}
