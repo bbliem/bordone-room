@@ -10,8 +10,9 @@ log = logging.getLogger(__name__)
 @receiver(post_save, sender=Photo, dispatch_uid='on_save')
 def on_save(sender, **kwargs):
     log.debug(f"Model saved (sender: {sender}): {kwargs}")
-    photo = kwargs['instance']
-    photo.generate_thumbnails()
+    if kwargs['created']: # FIXME? or kwargs['update_fields'] contains the file?
+        photo = kwargs['instance']
+        photo.generate_thumbnails()
 
 @receiver(post_delete, sender=Photo, dispatch_uid='on_delete')
 def on_delete(sender, **kwargs):

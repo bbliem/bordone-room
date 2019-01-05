@@ -1,55 +1,93 @@
 {% extends "gallery/base.html" %}
+{% load static %}
 {% load custom_tags %}
 
 {% block header %}
 {{ block.super }}
 {% include "gallery/justified_gallery_header.html" %}
+<script src="{% static 'gallery/js.cookie.js' %}"></script>
+{# https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script #}
+<script>
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+// XXX Remember (from https://docs.djangoproject.com/en/2.1/ref/csrf/#ajax):
+// If your view is not rendering a template containing the csrf_token template tag, Django might not set the CSRF token cookie. This is common in cases where forms are dynamically added to the page. To address this case, Django provides a view decorator which forces setting of the cookie: ensure_csrf_cookie().
+var csrftoken = Cookies.get('csrftoken');
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+</script>
 {% endblock %}
 
 {% block content %}
-<section>
-  <h1>Photos</h1>
-  {% if photo_list %}
-    <div id="gallery">
-      {% for photo in photo_list %}
-        <a href="{% url 'gallery:photo_detail' photo.id %}">
-          <img alt="{{ photo.name }}" src="{{ photo.thumbnail.url }}"
-               data-albums="[{{ photo.album_set|sort_by:'id'|key_to_list:'id'|join:',' }}]">
-        </a>
-      {% endfor %}
-    </div>
-    {% include "gallery/justified_gallery_script.html" %}
-  {% else %}
-    <p>There are no photos.</p>
-  {% endif %}
-</section>
-
-<section>
-  <h1>Upload</h1>
-  <form enctype="multipart/form-data" method="post" action="{% url 'gallery:photo_list' %}">
-    {% csrf_token %}
-    {{ form }}
-    <!--<input type="file" name="photos" multiple>-->
-    <input type="submit" value="Upload">
-  </form>
-</section>
-
 <div id="edit-sidebar" style="display: none">
   <select id="select_albums" multiple>
-    <option value="1">TODO</option>
+    {% for album in albums %}
+      <option value="{{ album.id }}">{{ album.title }}</option>
+    {% endfor %}
   </select>
 </div>
 
 <script>
-// TODO put this stuff in JS source file, eventually get rid of photo_batch_edit.js
-function editSidebarOpen() {
-  $("#main").css("margin-right", $("#edit-sidebar").outerWidth());
-  $("#edit-sidebar").css("display", "block");
-  $("#open-edit-sidebar").css("display", "none");
-
   // TODO XHR to get list of all albums
   var albumsSelector = $("#select_albums");
   var photosInSameAlbums = true;
+
+  albumsSelector.prop("disabled", true);
+  albumsSelector.blur();
+
+
+  albumsSelector.change(function() {
+    // If selected photos are from different albums, ask for confirmation before overriding albums.
+    if(!photosInSameAlbums) {
+      if(confirm("The selected photos are in different albums. Do you want to override this and put them in the selected albums instead?")) {
+        photosInSameAlbums = true;
+      } else {
+        $(this).val($(this).data("current"));
+        $(this).blur();
+        return false;
+      }
+    }
+    $(this).data("current", $(this).val());
+
+    //var selectedPhotos = $("#id_photos_field option:selected");
+    var selectedPhotos = $(".ui-selected > img");
+    var selectedAlbums = $("#id_albums_field option:selected");
+
+    // Apply album selection to selected photos.
+    selectedPhotos.each(function() {
+      $(this).attr("data-albums", "[" + albumsSelector.val() + "]");
+
+      // Send AJAX album change request to server
+      console.log("albums: " + albumsSelector.val());
+      $.ajax({
+        {#url: "{% url 'gallery:photo_list' %}",#}
+        url: $(this).parent().attr("href"),{# XXX #}
+        type: "PATCH",
+        contentType: "application/json",
+        data: JSON.stringify({
+          //TODO: TODO
+          photo: $(this).attr("data-photo"),
+          albums: albumsSelector.val()
+        }),
+        error: function(data) {
+          alert("Could not change albums: " + data.statusText);
+        }
+      });
+    });
+  });
+
+// TODO put this stuff in JS source file, eventually get rid of photo_batch_edit.js
+function openEditSidebar() {
+  $("#main").css("margin-right", $("#edit-sidebar").outerWidth());
+  $("#edit-sidebar").css("display", "block");
+  $("#open-edit-sidebar").css("display", "none");
 
   $('#gallery').justifiedGallery({
     rowHeight: 120,
@@ -62,6 +100,7 @@ function editSidebarOpen() {
       if(selectedPhotos.length === 0) {
         albumsSelector.val([]);
         albumsSelector.prop("disabled", true);
+        albumsSelector.blur();
         return;
       }
       albumsSelector.prop("disabled", false);
@@ -73,7 +112,6 @@ function editSidebarOpen() {
         var thisAlbumList = $(this).attr("data-albums"); // attr instead of data to avoid conversion to array
         if(i == 0) {
           firstAlbumList = thisAlbumList;
-          console.log(firstAlbumList);
         }
         else {
           if(thisAlbumList !== firstAlbumList) {
@@ -94,7 +132,7 @@ function editSidebarOpen() {
   });
 }
 
-function editSidebarClose() {
+function closeEditSidebar() {
   $("#main").css("margin-right", "0");
   $("#edit-sidebar").css("display", "none");
   $("#open-edit-sidebar").css("display", "inline-block");
@@ -105,5 +143,34 @@ function editSidebarClose() {
   });
 }
 </script>
-<button id="open-edit-sidebar" onclick="editSidebarOpen()">&#9776;</button>
+<button id="open-edit-sidebar" onclick="openEditSidebar()">&#9776;</button>
+
+
+<section>
+  <h1>Photos</h1>
+  {% if photo_list %}
+    <div id="gallery">
+      {% for photo in photo_list %}
+        <a href="{% url 'gallery:photo_detail' photo.id %}">
+          <img alt="{{ photo.name }}" src="{{ photo.thumbnail.url }}"
+               data-photo="{{ photo.id }}"
+               data-albums="[{{ photo.album_set|sort_by:'id'|key_to_list:'id'|join:',' }}]">
+        </a>
+      {% endfor %}
+    </div>
+    {% include "gallery/justified_gallery_script.html" %}
+  {% else %}
+    <p>There are no photos.</p>
+  {% endif %}
+</section>
+
+<section>
+  <h1>Upload</h1>
+  <form enctype="multipart/form-data" method="post" action="{% url 'gallery:photo_list' %}">
+    {% csrf_token %}
+    {{ upload_form }}
+    <!--<input type="file" name="photos" multiple>-->
+    <input type="submit" value="Upload">
+  </form>
+</section>
 {% endblock %}

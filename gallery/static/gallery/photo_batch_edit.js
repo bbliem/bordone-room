@@ -44,6 +44,7 @@ $("#gallery").selectable({
     else {
       albumsSelector.val([]);
     }
+    albumsSelector.data("current", albumsSelector.val());
   }
 });
 

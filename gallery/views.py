@@ -1,10 +1,11 @@
 import exiftool
+import json
 import logging
 import sys
 
 from django.conf import settings
 from django.urls import reverse_lazy
-from django.http import Http404, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.views import generic
 
 from .exif_reader import ExifReader
@@ -24,7 +25,8 @@ class PhotoListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = PhotoUploadForm()
+        context['upload_form'] = PhotoUploadForm()
+        context['albums'] = Album.objects.order_by('-creation_date')
         # TODO the following occurs many times -- refactor
         context['thumbnail_sizes'] = settings.GALLERY_THUMBNAIL_SIZES
         return context
@@ -37,6 +39,32 @@ class PhotoDetailView(generic.DetailView):
     model = Photo
     template_name = 'gallery/photo_detail.html'
 
+    def patch(self, request, *args, **kwargs):
+        request_str = request.body.decode('utf-8')
+        data = json.loads(request_str)
+        log.debug(f"PhotoDetailView got PATCH request: {data}")
+
+        # Get photo
+        photo_id = data.get('photo')
+        try:
+            photo = Photo.objects.get(id=photo_id)
+        except Photo.DoesNotExist:
+            return HttpResponseBadRequest(reason="Invalid photo specified")
+        log.debug(f"Updating photo {photo}")
+
+        # Get albums
+        try:
+            albums = [Album.objects.get(id=album_id)
+                      for album_id in data.get('albums')]
+        except Album.DoesNotExist:
+            return HttpResponseBadRequest(reason="Invalid albums specified")
+        log.debug(f"Setting albums {albums}")
+
+        # Update photo
+        photo.album_set.set(albums)
+        photo.save()
+        return HttpResponse() # success
+
 
 class PhotoUploadView(generic.FormView):
     form_class = PhotoUploadForm
@@ -47,7 +75,7 @@ class PhotoUploadView(generic.FormView):
         form = self.get_form(form_class)
         if form.is_valid():
             files = request.FILES.getlist('file_field')
-            print(f"Files {files}", file=sys.stderr)
+            log.debug(f"Uploaded files {files}", file=sys.stderr)
 
             with exiftool.ExifTool() as et:
                 exif_reader = ExifReader(et)
@@ -56,7 +84,7 @@ class PhotoUploadView(generic.FormView):
                     # We therefore need to force all uploads to be written to disk.
                     filename = f.temporary_file_path()
                     instance = Photo.create_with_exif(exif_reader, filename, original=f)
-                    print(f"Created {instance.__dict__}", file=sys.stderr)
+                    log.debug(f"Created {instance.__dict__}", file=sys.stderr)
                     instance.save()
             return self.form_valid(form)
         else:
