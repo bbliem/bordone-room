@@ -1,3 +1,7 @@
 Don't forget:
 
 pip install --user git+https://github.com/smarnach/pyexiftool.git
+
+Forget that, I forked it and made some modifications:
+
+pip install --user git+https://github.com/bbliem/pyexiftool.git

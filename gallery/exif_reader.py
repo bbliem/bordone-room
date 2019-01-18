@@ -31,14 +31,15 @@ def _parse_int(s):
 class ExifReader:
     # Tags that will be extracted from files and may be used in _field_readers
     _relevant_tags = [
-            'EXIF:DateTimeOriginal',
+            # The # suffix disables print conversion (otherwise we get, e.g., "1/30" instead of "0.0333...")
+            'EXIF:DateTimeOriginal#',
             'EXIF:Make',
             'EXIF:Model',
             'Composite:LensID',
-            'Composite:Aperture',
-            'EXIF:FocalLength',
-            'Composite:ShutterSpeed',
-            'EXIF:ISO',
+            'Composite:Aperture#',
+            'EXIF:FocalLength#',
+            'Composite:ShutterSpeed#',
+            'EXIF:ISO#',
             ]
 
     # Maps model field names to functions of an exiftool metadata object returning the value (or None if not available)
