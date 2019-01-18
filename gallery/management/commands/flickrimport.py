@@ -4,15 +4,14 @@ import json
 import logging
 import os
 import re
-from shutil import copyfile
 
 from django.conf import settings
 from django.core.files import File
 from django.core.management.base import BaseCommand, CommandError
-from django.db import transaction
+from django.db import transaction, connection # XXX remove connection
 
 from gallery.exif_reader import ExifReader
-from gallery.models import Photo
+from gallery.models import Album, Photo
 
 log = logging.getLogger(__name__)
 
@@ -22,16 +21,18 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('directory', nargs=1, help="Directory containing all extracted archives")
 
+    @transaction.atomic
     def handle(self, *args, **options):
         directory = options['directory'][0]
-        self.import_photos(directory)
-        self.import_albums(directory)
+        pk_of_flickr_id = self.import_photos(directory)
+        log.debug(f"PKs: {pk_of_flickr_id}")
+        self.import_albums(directory, pk_of_flickr_id)
 
-    @transaction.atomic
     def import_photos(self, directory):
+        pk_of_flickr_id = {}
         with exiftool.ExifTool(print_conversion=True) as et:
             exif_reader = ExifReader(et)
-            log.debug(f'Importing directory {directory}')
+            log.debug(f"Importing photos from directory {directory}")
 
             for filename in glob.glob(f'{directory}/photo_*.json'):
                 log.debug(f'Importing file {filename}')
@@ -56,9 +57,29 @@ class Command(BaseCommand):
                                                        num_views=data['count_views'],
                                                        upload_date=data['date_imported'],
                                                        original=File(pf, name=new_basename))
-                        log.debug(f"Created model instance {photo.original}")
                         photo.save()
+                        log.debug(f"Created photo model instance {photo}")
+                        pk_of_flickr_id[fid] = photo.id
+            return pk_of_flickr_id
 
-    def import_albums(self, directory):
+    def import_albums(self, directory, pk_of_flickr_id):
+        log.debug(f"Importing albums from directory {directory}")
         with open(f'{directory}/albums.json', 'rt') as f:
-            pass
+            for data in json.load(f)['albums']:
+                photo_ids = [pk_of_flickr_id[k] for k in data['photos']]
+                photos = Photo.objects.filter(id__in=photo_ids) # XXX can we use IDs instead of QuerySets later to avoid the SELECT?
+
+                cover_photo_flickr_id = data['cover_photo']
+                assert cover_photo_flickr_id.startswith('https://www.flickr.com/photos//')
+                cover_photo_flickr_id = cover_photo_flickr_id[31:]
+                cover_photo_id = pk_of_flickr_id.get(cover_photo_flickr_id)
+
+                album = Album(title=data['title'],
+                              description=data['description'],
+                              num_views=data['view_count'],
+                              creation_date=data['created'],
+                              modification_date=data['last_updated'],
+                              cover_photo_id=cover_photo_id)
+                album.save()
+                album.photos.set(photos)
+                log.debug(f"Created album model instance {album}")
