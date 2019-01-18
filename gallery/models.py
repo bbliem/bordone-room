@@ -5,6 +5,7 @@ import secrets
 
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit
 
@@ -22,7 +23,8 @@ def original_path(photo, filename):
     # base = ''.join(c for c in base if c in valid_chars)
     # base = base.replace(' ','_')
 
-    return f'{today.year}/{today.month}/{today.day}/{base}_{secret}{extension}'
+    #return f'{today.year}/{today.month}/{today.day}/{base}_{secret}{extension}'
+    return f'{photo.upload_date.year}/{photo.upload_date.month}/{photo.upload_date.day}/{base}_{secret}{extension}'
 
 class ThumbnailField(ImageSpecField):
     def __init__(self, source, size):
@@ -36,7 +38,7 @@ class ThumbnailField(ImageSpecField):
 class Photo(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
-    upload_date = models.DateTimeField(auto_now_add=True)
+    upload_date = models.DateTimeField(default=timezone.now)
     original = models.ImageField(upload_to=original_path)
 
     # Thumbnails
@@ -83,8 +85,8 @@ class Album(models.Model):
     description = models.TextField()
     cover_photo = models.ForeignKey(Photo, null=True, on_delete=models.SET_NULL, related_name='+') # TODO enforce that it's in this album? Avoid NULL values?
     photos = models.ManyToManyField(Photo)
-    creation_date = models.DateTimeField(auto_now_add=True)
-    modification_date = models.DateTimeField(auto_now_add=True)
+    creation_date = models.DateTimeField(default=timezone.now)
+    modification_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.title
