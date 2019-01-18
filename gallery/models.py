@@ -86,6 +86,7 @@ class Album(models.Model):
     num_views = models.IntegerField('number of views', default=0)
     photos = models.ManyToManyField(Photo)
     creation_date = models.DateTimeField(auto_now_add=True)
+    modification_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
