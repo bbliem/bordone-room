@@ -54,7 +54,6 @@ class Command(BaseCommand):
                                                        old_filename,
                                                        name=data['name'],
                                                        description=data['description'],
-                                                       num_views=data['count_views'],
                                                        upload_date=data['date_imported'],
                                                        original=File(pf, name=new_basename))
                         photo.save()
@@ -76,7 +75,6 @@ class Command(BaseCommand):
 
                 album = Album(title=data['title'],
                               description=data['description'],
-                              num_views=data['view_count'],
                               creation_date=data['created'],
                               modification_date=data['last_updated'],
                               cover_photo_id=cover_photo_id)

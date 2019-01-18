@@ -36,7 +36,6 @@ class ThumbnailField(ImageSpecField):
 class Photo(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
-    num_views = models.IntegerField('number of views', default=0)
     upload_date = models.DateTimeField(auto_now_add=True)
     original = models.ImageField(upload_to=original_path)
 
@@ -83,7 +82,6 @@ class Album(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     cover_photo = models.ForeignKey(Photo, null=True, on_delete=models.SET_NULL, related_name='+') # TODO enforce that it's in this album? Avoid NULL values?
-    num_views = models.IntegerField('number of views', default=0)
     photos = models.ManyToManyField(Photo)
     creation_date = models.DateTimeField(auto_now_add=True)
     modification_date = models.DateTimeField(auto_now_add=True)
