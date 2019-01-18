@@ -75,7 +75,7 @@ class PhotoUploadView(generic.FormView):
         form = self.get_form(form_class)
         if form.is_valid():
             files = request.FILES.getlist('file_field')
-            log.debug(f"Uploaded files {files}", file=sys.stderr)
+            log.debug(f"Uploaded files {files}")
 
             with exiftool.ExifTool() as et:
                 exif_reader = ExifReader(et)
@@ -84,7 +84,7 @@ class PhotoUploadView(generic.FormView):
                     # We therefore need to force all uploads to be written to disk.
                     filename = f.temporary_file_path()
                     instance = Photo.create_with_exif(exif_reader, filename, original=f)
-                    log.debug(f"Created {instance.__dict__}", file=sys.stderr)
+                    log.debug(f"Created {instance.__dict__}")
                     instance.save()
             return self.form_valid(form)
         else:

@@ -14,7 +14,7 @@ def original_path(photo, filename):
     today = date.today()
     # Add secret to filename in order to avoid guessing the names of photos
     # without viewing permission
-    secret = secrets.token_urlsafe(8)
+    secret = secrets.token_hex(8)
     base, extension = os.path.splitext(filename)
     base = base[:80] # crop to 80 characters
 
