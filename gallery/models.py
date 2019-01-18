@@ -19,11 +19,6 @@ def original_path(photo, filename):
     base, extension = os.path.splitext(filename)
     base = base[:80] # crop to 80 characters
 
-    # valid_chars = f'-_.() {string.ascii_letters}{string.digits}'
-    # base = ''.join(c for c in base if c in valid_chars)
-    # base = base.replace(' ','_')
-
-    #return f'{today.year}/{today.month}/{today.day}/{base}_{secret}{extension}'
     return f'{photo.upload_date.year}/{photo.upload_date.month}/{photo.upload_date.day}/{base}_{secret}{extension}'
 
 class ThumbnailField(ImageSpecField):

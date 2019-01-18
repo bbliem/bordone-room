@@ -15,13 +15,15 @@ from .models import Album, Photo
 log = logging.getLogger(__name__)
 
 class PhotoListView(generic.ListView):
+    model = Photo
+    ordering = ['-upload_date']
+    paginate_by = 50
     template_name = 'gallery/photo_list.html'
-    #model = Photo
 
-    def get_queryset(self):
-        """Return the last couple of photos."""
-        #return Photo.objects.order_by('-date_taken')[:2]
-        return Photo.objects.order_by('-date_taken')
+    # def get_queryset(self):
+    #     """Return the last couple of photos."""
+    #     #return Photo.objects.order_by('-date_taken')[:2]
+    #     return Photo.objects.order_by('-date_taken')[:50]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
