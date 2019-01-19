@@ -1,75 +1,111 @@
-var submitButton = $(":submit");
-submitButton.prop("disabled", true); // wait until the user changed something
+var photosInSameAlbums;
+var photosInSameAlbums;
 
-var photosSelector = $("#id_photos_field");
-var albumsSelector = $("#id_albums_field");
-albumsSelector.prop("disabled", true); // let user edit albums only when photos have been selected
+document.addEventListener('DOMContentLoaded', function() {
+  // TODO XHR to get list of all albums
+  albumsSelector = $("#select_albums");
+  photosInSameAlbums = true;
 
-var photosInSameAlbums = true;
+  albumsSelector.prop("disabled", true);
+  albumsSelector.blur();
 
-//photosSelector.change(function() {
-$("#gallery").selectable({
-  stop: function() {
+
+  albumsSelector.change(function() {
+    // If selected photos are from different albums, ask for confirmation before overriding albums.
+    if(!photosInSameAlbums) {
+      if(confirm("The selected photos are in different albums. Do you want to override this and put them in the selected albums instead?")) {
+        photosInSameAlbums = true;
+      } else {
+        $(this).val($(this).data("current"));
+        $(this).blur();
+        return false;
+      }
+    }
+    $(this).data("current", $(this).val());
+
     //var selectedPhotos = $("#id_photos_field option:selected");
     var selectedPhotos = $(".ui-selected > img");
+    var selectedAlbums = $("#id_albums_field option:selected");
 
-    if(selectedPhotos.length === 0) {
-      albumsSelector.val([]);
-      albumsSelector.prop("disabled", true);
-      return;
-    }
-    albumsSelector.prop("disabled", false);
+    // Apply album selection to selected photos.
+    selectedPhotos.each(function() {
+      $(this).attr("data-albums", "[" + albumsSelector.val() + "]");
 
-    // Check if all selected photos are in the same albums.
-    photosInSameAlbums = true;
-    var firstAlbumList;
-    selectedPhotos.each(function(i, element) {
-      var thisAlbumList = $(this).attr("data-albums"); // attr instead of data to avoid conversion to array
-      if(i == 0) {
-        firstAlbumList = thisAlbumList;
-        console.log(firstAlbumList);
+      // Send AJAX album change request to server
+      console.log("albums: " + albumsSelector.val());
+      $.ajax({
+        url: $(this).parent().attr("href"), // XXX
+        type: "PATCH",
+        contentType: "application/json",
+        data: JSON.stringify({
+          //TODO: TODO
+          photo: $(this).attr("data-photo"),
+          albums: albumsSelector.val()
+        }),
+        error: function(data) {
+          alert("Could not change albums: " + data.statusText);
+        }
+      });
+    });
+  });
+});
+
+function openEditSidebar() {
+  $("#main").css("margin-right", $("#edit-sidebar").outerWidth());
+  $("#edit-sidebar").css("display", "block");
+  $("#open-edit-sidebar").css("display", "none");
+  $("#gallery>a").addClass("disabled");
+
+  $('#gallery').justifiedGallery({
+    rowHeight: 120,
+    margins: 12,
+  }).selectable({
+    stop: function() {
+      //var selectedPhotos = $("#id_photos_field option:selected");
+      var selectedPhotos = $(".ui-selected > img");
+
+      if(selectedPhotos.length === 0) {
+        albumsSelector.val([]);
+        albumsSelector.prop("disabled", true);
+        albumsSelector.blur();
+        return;
+      }
+      albumsSelector.prop("disabled", false);
+
+      // Check if all selected photos are in the same albums.
+      photosInSameAlbums = true;
+      var firstAlbumList;
+      selectedPhotos.each(function(i, element) {
+        var thisAlbumList = $(this).attr("data-albums"); // attr instead of data to avoid conversion to array
+        if(i == 0) {
+          firstAlbumList = thisAlbumList;
+        }
+        else {
+          if(thisAlbumList !== firstAlbumList) {
+            photosInSameAlbums = false;
+            return false; // break
+          }
+        }
+      });
+
+      if(photosInSameAlbums) {
+        // Select the (equal) albums of selected photos in the album picker.
+        albumsSelector.val(JSON.parse(firstAlbumList));
       }
       else {
-        if(thisAlbumList !== firstAlbumList) {
-          photosInSameAlbums = false;
-          return false; // break
-        }
+        albumsSelector.val([]);
       }
-    });
-
-    if(photosInSameAlbums) {
-      // Select the (equal) albums of selected photos in the album picker.
-      albumsSelector.val(JSON.parse(firstAlbumList));
     }
-    else {
-      albumsSelector.val([]);
-    }
-    albumsSelector.data("current", albumsSelector.val());
-  }
-});
-
-albumsSelector.change(function() {
-  // If selected photos are from different albums, ask for confirmation before overriding albums.
-  if(!photosInSameAlbums) {
-    if(confirm("The selected photos are in different albums. Do you want to override this and put them in the selected albums instead?")) {
-      photosInSameAlbums = true;
-    } else {
-      $(this).val($(this).data("current"));
-      $(this).blur();
-      return false;
-    }
-  }
-  $(this).data("current", $(this).val());
-
-  //var selectedPhotos = $("#id_photos_field option:selected");
-  var selectedPhotos = $(".ui-selected > img");
-  var selectedAlbums = $("#id_albums_field option:selected");
-
-  // Apply album selection to selected photos.
-  selectedPhotos.each(function() {
-    $(this).attr("data-albums", "[" + albumsSelector.val() + "]");
   });
+}
 
-  // Enable submit button
-  submitButton.prop("disabled", false);
-});
+function closeEditSidebar() {
+  $("#main").css("margin-right", "0");
+  $("#edit-sidebar").css("display", "none");
+  $("#open-edit-sidebar").css("display", "inline-block");
+
+  $('#gallery').justifiedGallery({
+    rowHeight: jgRowHeight,
+    margins: 3,
+  });
+}

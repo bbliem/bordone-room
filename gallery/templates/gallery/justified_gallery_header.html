@@ -1,4 +1,12 @@
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'gallery/justifiedGallery.min.css' %}">
-<script type="text/javascript" src="{% static 'gallery/jquery.justifiedGallery.min.js'%}"></script>
+<script src="{% static 'gallery/jquery.justifiedGallery.min.js'%}" defer></script>
+{# Global variables that can be used in static javascript files #}
+<script>
+  var jgSizeRangeSuffixes = {
+    {% for size in thumbnail_sizes %}{{ size }}: '_{{ size }}', {% endfor %}
+  };
+  var jgRowHeight = {{ thumbnail_sizes.0 }};
+</script>
+<script src="{% static 'gallery/run_justified_gallery.js'%}" defer></script>

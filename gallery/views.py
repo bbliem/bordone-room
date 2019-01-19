@@ -14,7 +14,13 @@ from .models import Album, Photo
 
 log = logging.getLogger(__name__)
 
-class PhotoListView(generic.ListView):
+class CommonContextMixin(generic.base.ContextMixin):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['thumbnail_sizes'] = settings.GALLERY_THUMBNAIL_SIZES
+        return context
+
+class PhotoListView(CommonContextMixin, generic.ListView):
     model = Photo
     ordering = ['-upload_date']
     paginate_by = 50
@@ -29,8 +35,6 @@ class PhotoListView(generic.ListView):
         context = super().get_context_data(**kwargs)
         context['upload_form'] = PhotoUploadForm()
         context['albums'] = Album.objects.order_by('-creation_date')
-        # TODO the following occurs many times -- refactor
-        context['thumbnail_sizes'] = settings.GALLERY_THUMBNAIL_SIZES
         return context
 
     def post(self, request, *args, **kwargs):
@@ -93,7 +97,7 @@ class PhotoUploadView(generic.FormView):
             return self.form_invalid(form)
 
 
-class AlbumListView(generic.ListView):
+class AlbumListView(CommonContextMixin, generic.ListView):
     template_name = 'gallery/album_list.html'
     model = Album
 
@@ -103,7 +107,6 @@ class AlbumListView(generic.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = AlbumCreateForm()
-        context['thumbnail_sizes'] = settings.GALLERY_THUMBNAIL_SIZES
         return context
 
     def post(self, request, *args, **kwargs):
@@ -116,21 +119,15 @@ class AlbumCreateView(generic.CreateView):
     success_url = reverse_lazy('gallery:album_list')
 
 
-class AlbumDetailView(generic.DetailView):
+class AlbumDetailView(CommonContextMixin, generic.DetailView):
     model = Album
     template_name = 'gallery/album_detail.html'
 
 
-class PhotoBatchEditView(generic.FormView):
+class PhotoBatchEditView(CommonContextMixin, generic.FormView):
     template_name = 'gallery/photo_batch_edit.html'
     form_class = PhotoBatchEditForm
     success_url = reverse_lazy('gallery:index')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # TODO the following occurs many times -- refactor
-        context['thumbnail_sizes'] = settings.GALLERY_THUMBNAIL_SIZES
-        return context
 
     def form_valid(self, form):
         albums = form.cleaned_data['albums_field']

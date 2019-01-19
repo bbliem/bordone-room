@@ -1,9 +1,0 @@
-<script type="text/javascript">
-  $('#gallery').justifiedGallery({
-    sizeRangeSuffixes: {
-      {% for size in thumbnail_sizes %}{{ size }}: '_{{ size }}', {% endfor %}
-    },
-    rowHeight: {{ thumbnail_sizes.0 }},
-    margins: 3,
-  });
-</script>

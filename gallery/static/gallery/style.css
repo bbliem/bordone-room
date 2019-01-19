@@ -55,3 +55,7 @@ nav {
   border: 3px dotted rgb(74, 144, 217);
   background-color: rgba(74, 144, 217, 0.5);
 }
+
+a.disabled {
+  cursor: default;
+}
