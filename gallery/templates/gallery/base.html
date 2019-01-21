@@ -11,14 +11,10 @@
 {# For viewport, see https://getbootstrap.com/docs/4.2/getting-started/introduction/ #}
 {% block header %}
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-{# TODO download Bootstrap and use local version instead #}
-<link rel="stylesheet" type="text/css" href="{% static 'gallery/jquery-ui.min.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'gallery/style.css' %}">
-<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 
 <script src="{% static 'gallery/jquery-3.3.1.min.js'%}" defer></script>
-<script src="{% static 'gallery/jquery-ui.min.js'%}" defer></script>
-{# XXX Some Bootstrap components do not require Papper.js or Bootstrap JS, check which are needed #}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous" defer></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous" defer></script>
 <script src="https://unpkg.com/feather-icons" defer></script>

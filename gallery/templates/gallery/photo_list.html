@@ -5,17 +5,24 @@
 {% block header %}
 {{ block.super }}
 {% include "gallery/justified_gallery_header.html" %}
-<script src="{% static 'gallery/js.cookie.js' %}" defer></script>
+
+<link rel="stylesheet" type="text/css" href="{% static 'gallery/jquery-ui.min.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
+
+<script src="{% static 'gallery/jquery-ui.min.js'%}" defer></script>
+{# XXX Some Bootstrap components do not require Papper.js or Bootstrap JS, check which are needed #}
+<script src='{% static 'gallery/js.cookie.js' %}' defer></script>
 {# https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script #}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js" defer></script>
 <script>
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener("DOMContentLoaded", function() {
   // XXX Remember (from https://docs.djangoproject.com/en/2.1/ref/csrf/#ajax):
   // If your view is not rendering a template containing the csrf_token template tag, Django might not set the CSRF token cookie. This is common in cases where forms are dynamically added to the page. To address this case, Django provides a view decorator which forces setting of the cookie: ensure_csrf_cookie().
-  var csrftoken = Cookies.get('csrftoken');
+  var csrftoken = Cookies.get("csrftoken");
   $.ajaxSetup({
       beforeSend: function(xhr, settings) {
           if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -23,6 +30,9 @@ document.addEventListener('DOMContentLoaded', function() {
           }
       }
   });
+
+  //$(".selectpicker").selectpicker({title: "No photos selected"});
+  initAlbumsSelector();
 });
 </script>
 <script src="{% static 'gallery/photo_batch_edit.js' %}" defer></script>
@@ -30,7 +40,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 {% block content %}
 <div id="right-sidebar">
-  <select id="select_albums" multiple>
+  <div class="btn-group btn-group-sm">
+    <button class="btn" type="button" onclick="selectAllPhotos()"><i data-feather="check-square"></i>Select all</button>
+    <button class="btn" type="button" onclick="deselectAllPhotos()"><i data-feather="square"></i>Deselect all</button>
+  </div>
+
+  <select id="select-albums" class="selectpicker" multiple data-live-search="true" data-selected-text-format="count" data-actions-box="true" data-header="Albums of selected photos" data-width="300px">
     {% for album in albums %}
       <option value="{{ album.id }}">{{ album.title }}</option>
     {% endfor %}

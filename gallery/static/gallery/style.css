@@ -43,7 +43,7 @@ img {
   top: 0;
   right: 300px;
   margin-right: -300px;
-  overflow-x: hidden; /* Disable horizontal scroll */
+  /*overflow-x: hidden; [> Disable horizontal scroll <]*/
   padding-top: 100px;
   transition: all 0.5s ease;
 }
@@ -72,16 +72,18 @@ img {
 }
 
 .jg-entry.ui-selecting, .jg-entry.ui-selected {
-  outline-color: rgb(74, 144, 217);
+  outline-color: #e3b505;
   outline-width: 5px;
   outline-style: solid;
 }
 
 .ui-selectable-helper {
   position: absolute;
-  z-index: 100;
-  border: 3px dotted rgb(74, 144, 217);
-  background-color: rgba(74, 144, 217, 0.5);
+  /*z-index: 100;*/
+  /*border: 3px dotted rgb(74, 144, 217);*/
+  /*background-color: rgba(74, 144, 217, 0.5);*/
+  border: 3px dotted #e3b505;
+  background-color: rgba(227, 181, 5, 0.5);
 }
 
 .feather {
