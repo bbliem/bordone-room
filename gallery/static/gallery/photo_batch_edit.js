@@ -51,9 +51,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function openEditSidebar() {
-  $("#main").css("margin-right", $("#edit-sidebar").outerWidth());
-  $("#edit-sidebar").css("display", "block");
-  $("#open-edit-sidebar").css("display", "none");
+  //$("#open-edit-sidebar-button").css("display", "none");
+  $("#content").addClass("right-sidebar-shown");
   $("#gallery>a").addClass("disabled");
 
   $('#gallery').justifiedGallery({
@@ -100,12 +99,11 @@ function openEditSidebar() {
 }
 
 function closeEditSidebar() {
-  $("#main").css("margin-right", "0");
-  $("#edit-sidebar").css("display", "none");
-  $("#open-edit-sidebar").css("display", "inline-block");
+  $("#content").removeClass("right-sidebar-shown");
+  $("#gallery>a").removeClass("disabled");
 
   $('#gallery').justifiedGallery({
     rowHeight: jgRowHeight,
     margins: 3,
-  });
+  }).selectable("destroy");
 }

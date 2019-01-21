@@ -1,9 +1,11 @@
 body {
-  background: white;
+  font-family: 'Montserrat', sans-serif;
+  background: #f9f9f9;
+  padding-top: 100px;
 }
 
-li a {
-  color: green;
+a.disabled {
+  cursor: default;
 }
 
 img {
@@ -11,32 +13,62 @@ img {
   max-height: 100%;
 }
 
-/*nav {*/
-/*  width: 100%;*/
-/*  position: fixed;*/
-/*  [>z-index: 1;<]*/
-/*  [>height: 100px;<]*/
-/*  top: 0;*/
-/*  left: 0;*/
-/*  overflow: hidden;*/
-/*  background-color: white;*/
-/*  z-index: 2;*/
-/*}*/
+.navbar {
+  background-color: #6f6866;
+  min-height: 80px;
+}
 
-#edit-sidebar {
-  height: 100%; /* Full-height: remove this if you want "auto" height */
-  width: 300px; /* Set the width of the sidebar */
+.nav-item {
+  font-size: 1.1em;
+  margin-right: 30px;
+}
+
+.navbar-brand {
+  margin-right: 30px;
+}
+
+#content {
+  transition: all 0.5s ease;
+}
+
+#content.right-sidebar-shown {
+  padding-right: 300px;
+}
+
+#right-sidebar {
+  height: 100%;
+  width: 0;
   position: fixed; /* Fixed Sidebar (stay in place on scroll) */
   z-index: 1;
   top: 0;
-  right: 0;
+  right: 300px;
+  margin-right: -300px;
   overflow-x: hidden; /* Disable horizontal scroll */
-  padding: 10px;
   padding-top: 100px;
+  transition: all 0.5s ease;
 }
 
-#edit-sidebar > * {
+#right-sidebar > * {
   width: 100%;
+}
+
+#content.right-sidebar-shown #right-sidebar {
+  width: 300px;
+  display: block;
+}
+
+#content.right-sidebar-shown {
+  padding-right: -300px;
+}
+
+#open-edit-sidebar-button {
+  visibility: visible;
+  opacity: 1;
+  transition: all 0.5s linear;
+}
+#content.right-sidebar-shown #open-edit-sidebar-button {
+  visibility: hidden;
+  opacity: 0;
 }
 
 .jg-entry.ui-selecting, .jg-entry.ui-selected {
@@ -52,87 +84,9 @@ img {
   background-color: rgba(74, 144, 217, 0.5);
 }
 
-a.disabled {
-  cursor: default;
-}
-
-
-/* From Bootstrap example: https://getbootstrap.com/docs/4.2/examples/dashboard/ */
-
-body {
-  font-family: 'Montserrat', sans-serif;
-}
-
 .feather {
   width: 24px;
   height: 24px;
   vertical-align: text-bottom;
-}
-
-/*
- * Sidebar
- */
-
-.sidebar {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 100; /* Behind the navbar */
-  padding: 48px 0 0; /* Height of navbar */
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-}
-
-.sidebar-sticky {
-  position: relative;
-  top: 0;
-  height: calc(100vh - 48px);
-  padding-top: .5rem;
-  overflow-x: hidden;
-  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-}
-
-@supports ((position: -webkit-sticky) or (position: sticky)) {
-  .sidebar-sticky {
-    position: -webkit-sticky;
-    position: sticky;
-  }
-}
-
-.sidebar .nav-link {
-  font-weight: 500;
-  color: #333;
-}
-
-.sidebar .nav-link .feather {
   margin-right: 4px;
-  color: #999;
-}
-
-.sidebar .nav-link.active {
-  color: #007bff;
-}
-
-.sidebar .nav-link:hover .feather,
-.sidebar .nav-link.active .feather {
-  color: inherit;
-}
-
-.sidebar-heading {
-  font-size: .75rem;
-  text-transform: uppercase;
-}
-
-/*
- * Content
- */
-
-[role="main"] {
-  padding-top: 133px; /* Space for fixed navbar */
-}
-
-@media (min-width: 768px) {
-  [role="main"] {
-    padding-top: 48px; /* Space for fixed navbar */
-  }
 }

@@ -29,18 +29,22 @@ document.addEventListener('DOMContentLoaded', function() {
 {% endblock %}
 
 {% block content %}
-<div id="edit-sidebar" style="display: none">
+<div id="right-sidebar">
   <select id="select_albums" multiple>
     {% for album in albums %}
       <option value="{{ album.id }}">{{ album.title }}</option>
     {% endfor %}
   </select>
+
+  <button class="btn btn-outline-secondary" onclick="closeEditSidebar()">Close</button>
 </div>
 
-<button id="open-edit-sidebar" onclick="openEditSidebar()">&#9776;</button>
+<main class="container">
+  <div class="d-flex align-items-baseline">
+  <h1 class="float-left flex-grow-1">Photos</h1>
+  <button class="btn btn-outline-secondary float-right" id="open-edit-sidebar-button" onclick="openEditSidebar()">Edit</button>
+  </div>
 
-<section>
-  <h1>Photos</h1>
   {% if photo_list %}
     <div id="gallery">
       {% for photo in photo_list %}
@@ -53,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 
     {% if is_paginated %}
-      <div class="d-flex justify-content-center">
+      <div class="mt-3 d-flex justify-content-center">
         <ul class="pagination">
           {% if page_obj.has_previous %}
             <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&#8249;</a></li>
@@ -106,15 +110,16 @@ document.addEventListener('DOMContentLoaded', function() {
   {% else %}
     <p>There are no photos.</p>
   {% endif %}
-</section>
+</main>
 
-<section>
-  <h1>Upload</h1>
-  <form enctype="multipart/form-data" method="post" action="{% url 'gallery:photo_list' %}">
-    {% csrf_token %}
-    {{ upload_form }}
-    <!--<input type="file" name="photos" multiple>-->
-    <input type="submit" value="Upload">
-  </form>
-</section>
+{# TODO #}
+<!--<section>-->
+<!--  <h1>Upload</h1>-->
+<!--  <form enctype="multipart/form-data" method="post" action="{% url 'gallery:photo_list' %}">-->
+<!--    {% csrf_token %}-->
+<!--    {{ upload_form }}-->
+<!--    [><input type="file" name="photos" multiple><]-->
+<!--    <input type="submit" value="Upload">-->
+<!--  </form>-->
+<!--</section>-->
 {% endblock %}

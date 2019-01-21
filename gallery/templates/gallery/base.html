@@ -1,5 +1,6 @@
 {% load static %}
 {% load custom_tags %}
+{% url 'gallery:index' as index_url %}
 {% url 'gallery:photo_list' as photo_list_url %}
 {% url 'gallery:album_list' as album_list_url %}
 <!DOCTYPE html>
@@ -31,32 +32,35 @@ document.addEventListener('DOMContentLoaded', function() {
 </head>
 <body>
 
-<div class="container-fluid">
-  <div class="row">
-    <nav class="col-md-2 bg-right sidebar">
-      <div class="sidebar-sticky">
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <a class="nav-link {% active request photo_list_url %}" href="{{ photo_list_url }}">
-              <span data-feather="camera"></span>
-              Photos
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% active request album_list_url %}" href="{{ album_list_url }}">
-              <span data-feather="book-open"></span>
-              Albums
-            </a>
-          </li>
-        </ul>
-      </div>
-    </nav>
+<nav class="navbar navbar-expand-sm navbar-dark fixed-top">
+  <a class="navbar-brand" href="{{ index_url }}">Wumpus Photos</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
-    <main role="main" class="col-md-10 ml-sm-auto px-5">
-      {% block content %}
-      {% endblock %}
-    </main>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item {% active request photo_list_url %}">
+        <a class="nav-link" href="{{ photo_list_url }}">
+          <i data-feather="camera"></i>
+          Photos
+        </a>
+      </li>
+      <li class="nav-item {% active request album_list_url %}">
+        <a class="nav-link" href="{{ album_list_url }}">
+          <i data-feather="book-open"></i>
+          Albums
+        </a>
+      </li>
+    </ul>
+
+    <button type="button" class="btn btn-outline-light btn-lg">Upload</button>
   </div>
+</nav>
+
+<div id="content">
+{% block content %}
+{% endblock %}
 </div>
 
 </body>
