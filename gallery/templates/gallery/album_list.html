@@ -3,6 +3,16 @@
 {% block header %}
 {{ block.super }}
 {% include "gallery/justified_gallery_header.html" %}
+<script>
+  Object.assign(jgExtraParameters, {
+    cssAnimation: false,
+    captionSettings: {
+      animationDuration: 500,
+      visibleOpacity: 0.7,
+      nonVisibleOpacity: 0.7
+    }
+  });
+</script>
 {% endblock %}
 
 {% block content %}
