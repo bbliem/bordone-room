@@ -5,7 +5,7 @@ import sys
 
 from django.conf import settings
 from django.urls import reverse_lazy
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.views import generic
 
 from .exif_reader import ExifReader
@@ -14,11 +14,34 @@ from .models import Album, Photo
 
 log = logging.getLogger(__name__)
 
+
+class AjaxFormMixin:
+    def form_invalid(self, form):
+        if self.request.is_ajax():
+            response = {
+                'status': 'error',
+                'errors': form.errors.as_json(),
+            }
+            return JsonResponse(response, status=400)
+        else:
+            return super().form_invalid(form)
+
+    def form_valid(self, form):
+        if self.request.is_ajax():
+            response = {
+                'status': 'ok',
+            }
+            return JsonResponse(response)
+        else:
+            return super().form_valid(form)
+
+
 class CommonContextMixin(generic.base.ContextMixin):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['thumbnail_sizes'] = settings.GALLERY_THUMBNAIL_SIZES
         return context
+
 
 class PhotoListView(CommonContextMixin, generic.ListView):
     model = Photo
@@ -72,7 +95,7 @@ class PhotoDetailView(generic.DetailView):
         return HttpResponse() # success
 
 
-class PhotoUploadView(generic.FormView):
+class PhotoUploadView(AjaxFormMixin, generic.edit.BaseFormView):
     form_class = PhotoUploadForm
     success_url = reverse_lazy('gallery:index')
 
@@ -124,6 +147,7 @@ class AlbumDetailView(CommonContextMixin, generic.DetailView):
     template_name = 'gallery/album_detail.html'
 
 
+# TODO still used?
 class PhotoBatchEditView(CommonContextMixin, generic.FormView):
     template_name = 'gallery/photo_batch_edit.html'
     form_class = PhotoBatchEditForm

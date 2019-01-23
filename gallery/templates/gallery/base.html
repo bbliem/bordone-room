@@ -11,12 +11,18 @@
 {# For viewport, see https://getbootstrap.com/docs/4.2/getting-started/introduction/ #}
 {% block header %}
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-<link rel="stylesheet" type="text/css" href="{% static 'gallery/style.css' %}">
+<link rel="stylesheet" href="{% static 'gallery/jquery.dm-uploader.min.css' %}">
+<link rel="stylesheet" href="{% static 'gallery/style.css' %}">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 
 <script src="{% static 'gallery/jquery-3.3.1.min.js'%}" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous" defer></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous" defer></script>
+<script src="{% static 'gallery/jquery.dm-uploader.min.js' %}" defer></script>
+<script>
+  var photoUploadUrl = "{{ photo_list_url }}";
+</script>
+<script src="{% static 'gallery/photo_uploader_config.js' %}" defer></script>
 <script src="https://unpkg.com/feather-icons" defer></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -24,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 {% endblock %}
-<title>TODO</title>
+<title>Wumpus Photos</title>
 </head>
 <body>
 
@@ -50,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
       </li>
     </ul>
 
-    <button type="button" class="btn btn-outline-light btn-lg">Upload</button>
+    <button type="button" class="btn btn-outline-light btn-lg" data-toggle="modal" data-target="#upload-modal">Upload</button>
   </div>
 </nav>
 
@@ -58,6 +64,61 @@ document.addEventListener('DOMContentLoaded', function() {
 {% block content %}
 {% endblock %}
 </div>
+
+<div class="modal fade" id="upload-modal" tabindex="-1" role="dialog" aria-labelledby="upload-modal-label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="upload-modal-label">Upload photos</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="col-sm-12 mb-3">
+            <div id="drag-and-drop-zone" class="dm-uploader p-5 text-center">
+              <h3 class="mb-5 mt-5 text-muted">Drag &amp; drop photos here</h3>
+              <div class="btn btn-primary mb-5">
+                <span>Browse files</span>
+                <input type="file" title='Click to add photos' multiple>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="card h-100">
+              <div class="card-header">File transfers</div>
+              <ul class="list-unstyled p-2 d-flex flex-column col" id="files">
+                <li class="text-muted text-center empty">No files uploaded.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/html" id="files-template">
+  <li class="media">
+    <div class="media-body mb-1">
+      <p class="mb-2">
+        <strong>%%filename%%</strong> - Status: <span class="text-muted">Waiting</span>
+      </p>
+      <div class="progress mb-2">
+        <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+          role="progressbar"
+          style="width: 0%"
+          aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+        </div>
+      </div>
+      <hr class="mt-1 mb-1">
+    </div>
+  </li>
+</script>
 
 </body>
 </html>

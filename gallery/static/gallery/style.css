@@ -92,3 +92,8 @@ img {
   vertical-align: text-bottom;
   margin-right: 4px;
 }
+
+.dm-uploader {
+  border: 0.25rem dashed #a7a8aa;
+  text-align: center;
+}
