@@ -20,7 +20,7 @@ img {
 
 .nav-item {
   font-size: 1.1em;
-  margin-right: 30px;
+  /*margin-right: 30px;*/
 }
 
 .navbar-brand {
@@ -94,6 +94,6 @@ img {
 }
 
 .dm-uploader {
-  border: 0.25rem dashed #a7a8aa;
+  border: 0.25rem dashed #6f6866;
   text-align: center;
 }
