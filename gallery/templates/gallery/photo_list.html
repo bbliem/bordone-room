@@ -45,13 +45,15 @@ document.addEventListener("DOMContentLoaded", function() {
     <button class="btn" type="button" onclick="deselectAllPhotos()"><i data-feather="square"></i>Deselect all</button>
   </div>
 
-  <select id="select-albums" class="selectpicker" multiple data-live-search="true" data-selected-text-format="count" data-actions-box="true" data-header="Albums of selected photos" data-width="300px">
+  <select id="select-albums" class="selectpicker selection-required" multiple data-live-search="true" data-selected-text-format="count" data-actions-box="true" data-header="Albums of selected photos" data-width="300px">
     {% for album in albums %}
       <option value="{{ album.id }}">{{ album.title }}</option>
     {% endfor %}
   </select>
 
-  <button class="btn btn-outline-secondary" onclick="closeEditSidebar()">Close</button>
+  <button class="btn btn-outline-secondary selection-required" onclick="deleteSelected()"><i data-feather="trash-2"></i>Delete selected</button>
+  <hr>
+  <button class="btn btn-outline-secondary" onclick="closeEditSidebar()"><i data-feather="x"></i>Close</button>
 </div>
 
 <main class="container">

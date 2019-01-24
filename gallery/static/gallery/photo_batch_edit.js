@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded", function() {
   albumsSelector = $("#select-albums");
   photosInSameAlbums = true;
 
-  albumsSelector.prop("disabled", true);
-  albumsSelector.blur();
+  $(".selection-required").prop("disabled", true);
+  $(".selection-required").blur();
 
   //albumsSelector.change(function() {
   albumsSelector.on("changed.bs.select", function() {
@@ -63,14 +63,14 @@ function openEditSidebar() {
       var selectedPhotos = $(".ui-selected > img");
 
       if(selectedPhotos.length === 0) {
+        $(".selection-required").prop("disabled", true);
+        $(".selection-required").blur();
         albumsSelector.val([]);
-        albumsSelector.prop("disabled", true);
-        albumsSelector.blur();
         albumsSelector.selectpicker({title: "No photos selected"});
         albumsSelector.selectpicker("render")
         return;
       }
-      albumsSelector.prop("disabled", false);
+      $(".selection-required").prop("disabled", false);
 
       // Check if all selected photos are in the same albums.
       photosInSameAlbums = true;
@@ -132,4 +132,25 @@ function deselectAllPhotos() {
   $("a.ui-selectee").removeClass("ui-selected").addClass("ui-unselecting");
   // trigger the mouse stop event (this will select all .ui-selecting elements, and deselect all .ui-unselecting elements)
   $("#gallery").data("ui-selectable")._mouseStop(null);
+}
+
+function deleteSelected() {
+  var selectedPhotos = $(".ui-selected > img");
+  selectedPhotos.each(function() {
+    // Send AJAX delete request to server
+    $.ajax({
+      url: $(this).parent().attr("href"), // XXX
+      type: "DELETE",
+      contentType: "application/json",
+      data: JSON.stringify({
+        photo: $(this).attr("data-photo"),
+      }),
+      error: function(data) {
+        alert("Could not delete photo: " + data.statusText);
+      },
+      success: function(data) {
+        location.reload(true);
+      }
+    });
+  });
 }

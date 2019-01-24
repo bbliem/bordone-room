@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
       </li>
     </ul>
 
-    <ul class="navbar-nav">
+    <ul class="navbar-nav d-flex align-items-baseline">
       {% if perms.gallery.add_photo %}
         <li class="nav-item p-1">
           <a href="#" role="button" class="btn btn-outline-light btn-lg" data-toggle="modal" data-target="#upload-modal"><i data-feather="upload"></i>Upload</a>
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
       {% if user.is_authenticated %}
         <li class="nav-item p-1">
           <div class="dropdown">
-            <a href="#" role="button" class="btn btn-link btn-lg text-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Logged in as TODO</a>
+            <a href="#" role="button" class="btn btn-link text-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Logged in as TODO</a>
             <div class="dropdown-menu">
               <a class="dropdown-item" href="{% url 'gallery:logout' %}"><i data-feather="log-out"></i>Log out</a>
             </div>

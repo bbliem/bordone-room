@@ -98,6 +98,24 @@ class PhotoDetailView(generic.DetailView):
         photo.save()
         return HttpResponse() # success
 
+    @method_decorator(permission_required('gallery.delete_photo', raise_exception=True))
+    def delete(self, request, *args, **kwargs):
+        request_str = request.body.decode('utf-8')
+        data = json.loads(request_str)
+        log.debug(f"PhotoDetailView got DELETE request: {data}")
+
+        # Get photo
+        photo_id = data.get('photo')
+        try:
+            photo = Photo.objects.get(id=photo_id)
+        except Photo.DoesNotExist:
+            return HttpResponseBadRequest(reason="Invalid photo specified")
+        log.debug(f"Deleting photo {photo}")
+
+        # Delete photo
+        photo.delete()
+        return HttpResponse() # success
+
 
 class PhotoUploadView(PermissionRequiredMixin, AjaxFormMixin, generic.edit.BaseFormView):
     permission_required = 'gallery.add_photo'
