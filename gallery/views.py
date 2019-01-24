@@ -3,9 +3,12 @@ import json
 import logging
 import sys
 
+from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.conf import settings
 from django.urls import reverse_lazy
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.utils.decorators import method_decorator
 from django.views import generic
 
 from .exif_reader import ExifReader
@@ -68,6 +71,7 @@ class PhotoDetailView(generic.DetailView):
     model = Photo
     template_name = 'gallery/photo_detail.html'
 
+    @method_decorator(permission_required('gallery.change_photo', raise_exception=True))
     def patch(self, request, *args, **kwargs):
         request_str = request.body.decode('utf-8')
         data = json.loads(request_str)
@@ -95,7 +99,8 @@ class PhotoDetailView(generic.DetailView):
         return HttpResponse() # success
 
 
-class PhotoUploadView(AjaxFormMixin, generic.edit.BaseFormView):
+class PhotoUploadView(PermissionRequiredMixin, AjaxFormMixin, generic.edit.BaseFormView):
+    permission_required = 'gallery.add_photo'
     form_class = PhotoUploadForm
     success_url = reverse_lazy('gallery:index')
 
@@ -136,7 +141,8 @@ class AlbumListView(CommonContextMixin, generic.ListView):
         return AlbumCreateView.as_view()(request, args, kwargs)
 
 
-class AlbumCreateView(generic.CreateView):
+class AlbumCreateView(PermissionRequiredMixin, generic.CreateView):
+    permission_required = 'gallery.add_album'
     form_class = AlbumCreateForm
     model = Album
     success_url = reverse_lazy('gallery:album_list')
@@ -148,7 +154,8 @@ class AlbumDetailView(CommonContextMixin, generic.DetailView):
 
 
 # TODO still used?
-class PhotoBatchEditView(CommonContextMixin, generic.FormView):
+class PhotoBatchEditView(PermissionRequiredMixin, CommonContextMixin, generic.FormView):
+    permission_required = 'gallery.change_photo'
     template_name = 'gallery/photo_batch_edit.html'
     form_class = PhotoBatchEditForm
     success_url = reverse_lazy('gallery:index')
