@@ -1,0 +1,41 @@
+{% extends "gallery/base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+<main class="container">
+  <h1>Log in</h1>
+
+  {% if form.errors %}
+    <div class="alert alert-danger" role="alert">
+      Your username and password didn't match. Please try again.
+    </div>
+  {% endif %}
+
+  {% if next %}
+    <div class="alert alert-danger" role="alert">
+      {% if user.is_authenticated %}
+          Your account doesn't have access to this page. To proceed, please login with an account that has access.
+      {% else %}
+        Please log in to see this page.
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <form method="post" action="{% url 'gallery:login' %}">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}">
+    <div class="form-group">
+      {{ form.username.label_tag }}
+      {{ form.username|add_class:"form-control" }}
+    </div>
+    <div class="form-group">
+      {{ form.password.label_tag }}
+      {{ form.password|add_class:"form-control" }}
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+  {# Assumes you setup the password_reset view in your URLconf #}
+  {# <p><a href="{% url 'password_reset' %}">Lost password?</a></p> #}
+</main>
+{% endblock %}

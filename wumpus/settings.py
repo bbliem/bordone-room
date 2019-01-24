@@ -158,3 +158,6 @@ IMAGEKIT_SPEC_CACHEFILE_NAMER = 'gallery.namers.source_name_as_path'
 GALLERY_THUMBNAIL_SIZES = [240, 320, 500, 640, 800, 1024]
 
 INTERNAL_IPS = ['127.0.0.1'] # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'

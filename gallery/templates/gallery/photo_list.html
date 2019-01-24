@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function() {
   <div class="d-flex align-items-baseline">
     <h1 class="float-left flex-grow-1">Photos</h1>
     {% if perms.gallery.change_photo %}
-      <button class="btn btn-outline-secondary float-right" id="open-edit-sidebar-button" onclick="openEditSidebar()"><i data-feather="edit"></i>Edit</button>
+      <button class="btn float-right" id="open-edit-sidebar-button" onclick="openEditSidebar()"><i data-feather="edit" title="Edit"></i></button>
     {% endif %}
   </div>
 
