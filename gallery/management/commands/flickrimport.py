@@ -44,6 +44,7 @@ class Command(BaseCommand):
                 with open(filename, 'rt') as jf:
                     data = json.load(jf)
                     fid = data['id']
+                    public = data['privacy'] == 'public'
 
                     photo_filenames = glob.glob(f'{directory}/*_{fid}_o.jpg')
                     if len(photo_filenames) != 1:
@@ -76,6 +77,7 @@ class Command(BaseCommand):
                                                        name=data['name'],
                                                        description=data['description'],
                                                        upload_date=date_imported,
+                                                       public=public,
                                                        #original=File(pf, name=new_basename))
                                                        )
                         if existing_original:

@@ -34,6 +34,7 @@ class Photo(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
     upload_date = models.DateTimeField(default=timezone.now)
+    public = models.BooleanField(default=False)
     original = models.ImageField(upload_to=original_path)
 
     # Thumbnails

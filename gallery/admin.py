@@ -5,7 +5,7 @@ from .models import Album
 
 class PhotoAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {'fields': ['name', 'description', 'original']}),
+        (None, {'fields': ['name', 'description', 'public', 'original']}),
         ('Metadata', {'fields': ['date_taken',
                                  'make',
                                  'model',
