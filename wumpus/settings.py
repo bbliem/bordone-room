@@ -88,12 +88,24 @@ WSGI_APPLICATION = 'wumpus.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': decouple.config('DB_NAME'),
+            'USER': decouple.config('DB_USER'),
+            'PASSWORD': decouple.config('DB_PASSWORD'),
+            'HOST': decouple.config('DB_HOST'),
+            'PORT': '',
+        }
+    }
 
 
 # Password validation
