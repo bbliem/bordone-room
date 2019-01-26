@@ -171,7 +171,8 @@ LOGGING = {
 
 #CURRENT_DIR = os.path.dirname(__file__)
 #MEDIA_ROOT = os.path.join(CURRENT_DIR, 'media')
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = decouple.config('MEDIA_ROOT')
 MEDIA_URL = '/media/'
 
 IMAGEKIT_CACHEFILE_DIR = '' # Put thumbnails in the same directory as originals
