@@ -5,6 +5,7 @@ django-imagekit==4.0.2
 django-widget-tweaks==1.4.3
 pilkit==2.0
 Pillow==5.4.1
+psycopg2==2.7.7
 PyExifTool==0.1
 python-decouple==3.1
 pytz==2018.9

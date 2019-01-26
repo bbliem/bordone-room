@@ -35,7 +35,7 @@ class Command(BaseCommand):
 
     def import_photos(self, directory):
         pk_of_flickr_id = {}
-        with exiftool.ExifTool(print_conversion=True) as et:
+        with exiftool.ExifTool(settings.EXIFTOOL, print_conversion=True) as et:
             exif_reader = ExifReader(et)
             log.debug(f"Importing photos from directory {directory}")
 

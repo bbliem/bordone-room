@@ -129,7 +129,7 @@ class PhotoUploadView(PermissionRequiredMixin, AjaxFormMixin, generic.edit.BaseF
             files = request.FILES.getlist('file_field')
             log.debug(f"Uploaded files {files}")
 
-            with exiftool.ExifTool() as et:
+            with exiftool.ExifTool(settings.EXIFTOOL) as et:
                 exif_reader = ExifReader(et)
                 for f in files:
                     # XXX this assumes that all files are instances of TemporaryUploadedFile.
