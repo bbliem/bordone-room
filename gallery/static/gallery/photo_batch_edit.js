@@ -1,9 +1,11 @@
 var photosInSameAlbums;
+var photosHaveSameVisibility;
 
 document.addEventListener("DOMContentLoaded", function() {
   // TODO XHR to get list of all albums
   albumsSelector = $("#select-albums");
   photosInSameAlbums = true;
+  photosHaveSameVisibility = true;
 
   $(".selection-required").prop("disabled", true);
   $(".selection-required").blur();
@@ -32,6 +34,7 @@ document.addEventListener("DOMContentLoaded", function() {
         url: $(this).parent().attr("href"), // XXX
         type: "PATCH",
         contentType: "application/json",
+        context: this,
         data: JSON.stringify({
           photo: $(this).attr("data-photo"),
           albums: albumsSelector.val()
@@ -42,6 +45,45 @@ document.addEventListener("DOMContentLoaded", function() {
         },
         success: function(data) {
           $(this).attr("data-albums", "[" + albumsSelector.val() + "]");
+        }
+      });
+    });
+  });
+
+  publicCheckbox = $("#public");
+  publicCheckbox.change(function() {
+    // If selected photos are of different visibility status, ask for confirmation before overriding status.
+    if(!photosHaveSameVisibility) {
+      if(confirm("The selected photos have different visibility. Do you want to override it?")) {
+        photosHaveSameVisibility = true;
+      } else {
+        $(this).prop("checked", $(this).data("current") === "public");
+        $(this).blur();
+        return false;
+      }
+    }
+    $(this).data("current", $(this).prop("checked") ? "public" : "private");
+
+    var selectedPhotos = $(".ui-selected > img");
+
+    // Apply visibility status to selected photos.
+    selectedPhotos.each(function() {
+      // Send AJAX visibility change request to server
+      $.ajax({
+        url: $(this).parent().attr("href"), // XXX
+        type: "PATCH",
+        contentType: "application/json",
+        context: this,
+        data: JSON.stringify({
+          photo: $(this).attr("data-photo"),
+          visibility: (publicCheckbox.prop("checked") ? "public" : "private")
+        }),
+        error: function(data) {
+          alert("Could not change visibility: " + data.statusText);
+          updatePublicCheckbox();
+        },
+        success: function(data) {
+          $(this).attr("data-visibility", publicCheckbox.prop("checked") ? "public" : "private");
         }
       });
     });
@@ -78,6 +120,34 @@ function updateAlbumsSelectorValue() {
   albumsSelector.selectpicker("refresh").selectpicker("render");
 }
 
+function updatePublicCheckbox() {
+  // Check if all selected photos have the same visibility
+  photosHaveSameVisibility = true;
+  var firstVisibility;
+  var selectedPhotos = $(".ui-selected > img");
+  selectedPhotos.each(function(i, element) {
+    var thisVisibility = $(this).attr("data-visibility");
+    if(i == 0) {
+      firstVisibility = thisVisibility;
+    }
+    else {
+      if(thisVisibility !== firstVisibility) {
+        photosHaveSameVisibility = false;
+        return false; // break
+      }
+    }
+  });
+
+  if(photosHaveSameVisibility) {
+    // Set checkbox to the (common) visibility status of the selected photos
+    publicCheckbox.prop("checked", firstVisibility === "public");
+  }
+  else {
+    publicCheckbox.prop("checked", false);
+    // TODO display warning symbol next to checkbox
+  }
+}
+
 function openEditSidebar() {
   //$("#open-edit-sidebar-button").css("display", "none");
   $("#content").addClass("right-sidebar-shown");
@@ -102,6 +172,7 @@ function openEditSidebar() {
       $(".selection-required").prop("disabled", false);
 
       updateAlbumsSelectorValue();
+      updatePublicCheckbox();
     }
   });
 }

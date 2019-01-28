@@ -50,6 +50,8 @@ img {
 
 #right-sidebar > * {
   width: 100%;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 #content.right-sidebar-shown #right-sidebar {

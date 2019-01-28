@@ -86,15 +86,26 @@ class PhotoDetailView(generic.DetailView):
         log.debug(f"Updating photo {photo}")
 
         # Get albums
-        try:
-            albums = [Album.objects.get(id=album_id)
-                      for album_id in data.get('albums')]
-        except Album.DoesNotExist:
-            return HttpResponseBadRequest(reason="Invalid albums specified")
-        log.debug(f"Setting albums {albums}")
+        if(data.get('albums')):
+            try:
+                albums = [Album.objects.get(id=album_id)
+                          for album_id in data.get('albums')]
+            except Album.DoesNotExist:
+                return HttpResponseBadRequest(reason="Invalid albums specified")
+            log.debug(f"Setting albums {albums}")
+            photo.album_set.set(albums)
 
-        # Update photo
-        photo.album_set.set(albums)
+        # Get visibility
+        visibility = data.get('visibility')
+        if visibility:
+            log.debug(f"Setting visibility to {visibility}")
+            if visibility == 'public':
+                photo.public = True
+            elif visibility == "private":
+                photo.public = False
+            else:
+                return HttpResponseBadRequest(reason="Invalid visibility specified")
+
         photo.save()
         return HttpResponse() # success
 

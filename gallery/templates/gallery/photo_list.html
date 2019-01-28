@@ -44,12 +44,21 @@ document.addEventListener("DOMContentLoaded", function() {
     <button class="btn" type="button" onclick="selectAllPhotos()"><i data-feather="check-square"></i>Select all</button>
     <button class="btn" type="button" onclick="deselectAllPhotos()"><i data-feather="square"></i>Deselect all</button>
   </div>
+  <hr>
 
-  <select id="select-albums" class="selectpicker selection-required" multiple data-live-search="true" data-selected-text-format="count" data-actions-box="true" data-header="Albums of selected photos" data-width="300px">
-    {% for album in albums %}
-      <option value="{{ album.id }}">{{ album.title }}</option>
-    {% endfor %}
-  </select>
+  <div>
+    <label for="select-albums">Albums</label>
+    <select id="select-albums" class="selectpicker selection-required" multiple data-live-search="true" data-selected-text-format="count" data-actions-box="true" data-header="Albums of selected photos" data-width="300px">
+      {% for album in albums %}
+        <option value="{{ album.id }}">{{ album.title }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div>
+    <input id="public" name="public" type="checkbox" class="selection-required">
+    <label for="public">Public</label>
+  </div>
 
   <button class="btn btn-outline-secondary selection-required" onclick="deleteSelected()"><i data-feather="trash-2"></i>Delete selected</button>
   <hr>
@@ -70,7 +79,8 @@ document.addEventListener("DOMContentLoaded", function() {
         <a href="{% url 'gallery:photo_detail' photo.id %}">
           <img alt="{{ photo.name }}" src="{{ photo.thumbnail.url }}"
                data-photo="{{ photo.id }}"
-               data-albums="[{{ photo.album_set|sort_by:'id'|key_to_list:'id'|join:',' }}]">
+               data-albums="[{{ photo.album_set|sort_by:'id'|key_to_list:'id'|join:',' }}]"
+               data-visibility="{% if photo.public %}public{% else %}private{% endif %}">
         </a>
       {% endfor %}
     </div>
