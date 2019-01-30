@@ -11,12 +11,3 @@ class AlbumCreateForm(forms.ModelForm):
     class Meta:
         model = Album
         fields = ['title', 'description']
-
-
-class PhotoBatchEditForm(forms.Form):
-    photos_field = forms.ModelMultipleChoiceField(
-        queryset=Photo.objects.all(),
-        widget=SelectMultipleImages,
-    )
-    albums_field = forms.ModelMultipleChoiceField(queryset=Album.objects.all(),
-                                                  required=False)

@@ -14,8 +14,6 @@ urlpatterns = [
          name='photo_detail'),
     path('albums/', views.AlbumListView.as_view(), name='album_list'),
     path('albums/<int:pk>/', views.AlbumDetailView.as_view(), name='album_detail'),
-    path('organize/', views.PhotoBatchEditView.as_view(),
-         name='photo_batch_edit'),
     path('accounts/login/',
          auth_views.LoginView.as_view(template_name='gallery/login.html'),
          name='login'),

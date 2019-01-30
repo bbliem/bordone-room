@@ -12,7 +12,7 @@ from django.utils.decorators import method_decorator
 from django.views import generic
 
 from .exif_reader import ExifReader
-from .forms import AlbumCreateForm, PhotoUploadForm, PhotoBatchEditForm
+from .forms import AlbumCreateForm, PhotoUploadForm
 from .models import Album, Photo
 
 log = logging.getLogger(__name__)
@@ -204,20 +204,3 @@ class AlbumDetailView(CommonContextMixin, generic.DetailView):
             # FIXME do something more reasonable
             queryset = queryset.select_related('cover_photo').filter(cover_photo__public=True)
         return queryset
-
-
-# TODO still used?
-class PhotoBatchEditView(PermissionRequiredMixin, CommonContextMixin, generic.FormView):
-    permission_required = 'gallery.change_photo'
-    template_name = 'gallery/photo_batch_edit.html'
-    form_class = PhotoBatchEditForm
-    success_url = reverse_lazy('gallery:index')
-
-    def form_valid(self, form):
-        albums = form.cleaned_data['albums_field']
-        for photo in form.cleaned_data['photos_field']:
-            log.debug(f"Changing album set of photo {photo.id} from "
-                      f"{photo.album_set} to {albums}")
-            photo.album_set.set(albums)
-            photo.save()
-        return super().form_valid(form)
