@@ -52,10 +52,11 @@ class PhotoListView(CommonContextMixin, generic.ListView):
     paginate_by = 50
     template_name = 'gallery/photo_list.html'
 
-    # def get_queryset(self):
-    #     """Return the last couple of photos."""
-    #     #return Photo.objects.order_by('-date_taken')[:2]
-    #     return Photo.objects.order_by('-date_taken')[:50]
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if not self.request.user.is_authenticated:
+            queryset = queryset.filter(public=True)
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -70,6 +71,13 @@ class PhotoListView(CommonContextMixin, generic.ListView):
 class PhotoDetailView(generic.DetailView):
     model = Photo
     template_name = 'gallery/photo_detail.html'
+
+    # FIXME this causes a 404 error if the user has no permission, but we should report permission denied
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if not self.request.user.is_authenticated:
+            queryset = queryset.filter(public=True)
+        return queryset
 
     @method_decorator(permission_required('gallery.change_photo', raise_exception=True))
     def patch(self, request, *args, **kwargs):
@@ -155,11 +163,18 @@ class PhotoUploadView(PermissionRequiredMixin, AjaxFormMixin, generic.edit.BaseF
 
 
 class AlbumListView(CommonContextMixin, generic.ListView):
-    template_name = 'gallery/album_list.html'
     model = Album
+    ordering = ['-creation_date']
+    paginate_by = 50
+    template_name = 'gallery/album_list.html'
 
     def get_queryset(self):
-        return Album.objects.order_by('-creation_date')
+        queryset = super().get_queryset()
+        if not self.request.user.is_authenticated:
+            # Only display albums with a public cover photo
+            # FIXME do something more reasonable
+            queryset = queryset.select_related('cover_photo').filter(cover_photo__public=True)
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -180,6 +195,15 @@ class AlbumCreateView(PermissionRequiredMixin, generic.CreateView):
 class AlbumDetailView(CommonContextMixin, generic.DetailView):
     model = Album
     template_name = 'gallery/album_detail.html'
+
+    # FIXME this causes a 404 error if the user has no permission, but we should report permission denied
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if not self.request.user.is_authenticated:
+            # Only display albums with a public cover photo
+            # FIXME do something more reasonable
+            queryset = queryset.select_related('cover_photo').filter(cover_photo__public=True)
+        return queryset
 
 
 # TODO still used?
