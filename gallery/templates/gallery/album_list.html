@@ -17,32 +17,31 @@
 
 {% block content %}
 <main class="container">
-  <section>
-    <h1>Albums</h1>
-    {% if album_list %}
-      <div id="gallery">
-        {% for album in album_list %}
-          <a href="{% url 'gallery:album_detail' album.id %}">
-            {% if album.cover_photo %}
-              <img alt="{{ album.title }}" src="{{ album.cover_photo.thumbnail.url }}">
-            {% else %}
-              {{ album.title }}
-            {% endif %}
-          </a>
-        {% endfor %}
-      </div>
-    {% else %}
-      <p>There are no albums.</p>
-    {% endif %}
-  </section>
+  <h1>Albums</h1>
+  {% if album_list %}
+    <div id="gallery">
+      {% for album in album_list %}
+        <a href="{% url 'gallery:album_detail' album.id %}">
+          {% if album.cover_photo %}
+            <img alt="{{ album.title }}" src="{{ album.cover_photo.thumbnail.url }}">
+          {% else %}
+            {{ album.title }}
+          {% endif %}
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>There are no albums.</p>
+  {% endif %}
 
-  <section>
+  {% if perms.gallery.add_album %}
+    {# TODO put this somewhere nice #}
     <h1>Create album</h1>
     <form enctype="multipart/form-data" method="post" action="{% url 'gallery:album_list' %}">
       {% csrf_token %}
       {{ form }}
       <input type="submit" value="Create">
     </form>
-  </section>
+  {% endif %}
 </main>
 {% endblock %}
