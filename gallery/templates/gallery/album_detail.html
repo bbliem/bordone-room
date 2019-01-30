@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-<section>
+<main class="container">
   <h1>{{ album.title }}</h1>
   <p>{{ album.description }}</p>
   {% if album.photos %}
@@ -20,5 +20,5 @@
   {% else %}
     <p>There are no photos.</p>
   {% endif %}
-</section>
+</main>
 {% endblock %}
