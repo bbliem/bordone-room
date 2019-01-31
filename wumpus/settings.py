@@ -83,6 +83,27 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'wumpus.wsgi.application'
 
+LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+                },
+            },
+        'loggers': {
+            'gallery': {
+                'handlers': ['console'],
+                'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+                },
+            },
+        }
+
+INTERNAL_IPS = ['127.0.0.1'] # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
@@ -156,26 +177,13 @@ STATIC_URL = '/static/'
 STATIC_ROOT = decouple.config('STATIC_ROOT')
 
 
+# File uploads
+FILE_UPLOAD_PERMISSIONS = 0o644
+
 # Force all uploads to be written to disk. We need this for exiftool.
 # (XXX technically we could send the small in-memory uploads to exiftool's
 # stdin -- investigate!)
 FILE_UPLOAD_MAX_MEMORY_SIZE = 0
-
-LOGGING = {
-        'version': 1,
-        'disable_existing_loggers': False,
-        'handlers': {
-            'console': {
-                'class': 'logging.StreamHandler',
-                },
-            },
-        'loggers': {
-            'gallery': {
-                'handlers': ['console'],
-                'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
-                },
-            },
-        }
 
 #CURRENT_DIR = os.path.dirname(__file__)
 #MEDIA_ROOT = os.path.join(CURRENT_DIR, 'media')
@@ -188,10 +196,5 @@ IMAGEKIT_SPEC_CACHEFILE_NAMER = 'gallery.namers.source_name_as_path'
 
 # The first size will be the default preview size
 GALLERY_THUMBNAIL_SIZES = [240, 320, 500, 640, 800, 1024]
-
-INTERNAL_IPS = ['127.0.0.1'] # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
-
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
 
 EXIFTOOL = decouple.config('EXIFTOOL', default='exiftool')
