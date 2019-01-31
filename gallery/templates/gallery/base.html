@@ -1,14 +1,14 @@
+{% spaceless %}
 {% load static %}
 {% load custom_tags %}
 {% url 'gallery:index' as index_url %}
 {% url 'gallery:photo_list' as photo_list_url %}
 {% url 'gallery:album_list' as album_list_url %}
-<!DOCTYPE html>
+{% endspaceless %}<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-{# For viewport, see https://getbootstrap.com/docs/4.2/getting-started/introduction/ #}
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">{# see https://getbootstrap.com/docs/4.2/getting-started/introduction/ #}
 {% block header %}
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 <link rel="stylesheet" href="{% static 'gallery/jquery.dm-uploader.min.css' %}">
