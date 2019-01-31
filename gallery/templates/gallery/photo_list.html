@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function() {
   {% if photo_list %}
     <div id="gallery">
       {% for photo in photo_list %}
-        <a href="{% url 'gallery:photo_detail' photo.id %}">
+        <a href="{% url 'gallery:photo_detail' photo.slug %}">
           <img alt="{{ photo.name }}" src="{{ photo.thumbnail.url }}"
                data-photo="{{ photo.id }}"
                data-albums="[{{ photo.album_set|sort_by:'id'|key_to_list:'id'|join:',' }}]"

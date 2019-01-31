@@ -211,9 +211,10 @@ function deselectAllPhotos() {
 
 function deleteSelected() {
   var selectedPhotos = $(".ui-selected > img");
+  var deferredRequests = [];
   selectedPhotos.each(function() {
     // Send AJAX delete request to server
-    $.ajax({
+    deferredRequests.push($.ajax({
       url: $(this).parent().attr("href"), // XXX
       type: "DELETE",
       contentType: "application/json",
@@ -222,10 +223,11 @@ function deleteSelected() {
       }),
       error: function(data) {
         alert('Could not delete photo: ' + data.statusText);
-      },
-      success: function(data) {
-        location.reload(true);
       }
-    });
+    }));
+  });
+  // When all requests are finished, reload page
+  $.when.apply(null, deferredRequests).done(function() {
+    location.reload(true);
   });
 }

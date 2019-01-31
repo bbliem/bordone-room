@@ -12,7 +12,7 @@
   {% if album.photos %}
     <div id="gallery">
       {% for photo in album.photos.all %}
-        <a href="{% url 'gallery:photo_detail' photo.id %}">
+        <a href="{% url 'gallery:photo_detail' photo.slug %}">
           <img alt="{{ photo.name }}" src="{{ photo.thumbnail.url }}">
         </a>
       {% endfor %}

@@ -3,6 +3,7 @@ import logging
 import os
 import secrets
 
+from autoslug import AutoSlugField
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
@@ -21,6 +22,7 @@ def original_path(photo, filename):
 
     return f'{photo.upload_date.year}/{photo.upload_date.month}/{photo.upload_date.day}/{base}_{secret}{extension}'
 
+
 class ThumbnailField(ImageSpecField):
     def __init__(self, source, size):
         super().__init__(source=source,
@@ -30,8 +32,10 @@ class ThumbnailField(ImageSpecField):
                          processors=[ResizeToFit(size, size)],
                          )
 
+
 class Photo(models.Model):
     name = models.CharField(max_length=200)
+    slug = AutoSlugField(populate_from='name', unique=True, null=True)
     description = models.TextField()
     upload_date = models.DateTimeField(default=timezone.now)
     public = models.BooleanField(default=False)
@@ -76,8 +80,10 @@ class Photo(models.Model):
             t = self.thumbnail(size)
             t.storage.delete(t.path)
 
+
 class Album(models.Model):
     title = models.CharField(max_length=200)
+    slug = AutoSlugField(populate_from='title', unique=True, null=True)
     description = models.TextField()
     cover_photo = models.ForeignKey(Photo, null=True, on_delete=models.SET_NULL, related_name='+') # TODO enforce that it's in this album? Avoid NULL values?
     photos = models.ManyToManyField(Photo)

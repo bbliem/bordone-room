@@ -1,6 +1,7 @@
 import exiftool
 import json
 import logging
+import os
 import sys
 
 from django.contrib.auth.decorators import permission_required
@@ -154,7 +155,11 @@ class PhotoUploadView(PermissionRequiredMixin, AjaxFormMixin, generic.edit.BaseF
                     # XXX this assumes that all files are instances of TemporaryUploadedFile.
                     # We therefore need to force all uploads to be written to disk.
                     filename = f.temporary_file_path()
-                    instance = Photo.create_with_exif(exif_reader, filename, original=f)
+                    photo_name, _ = os.path.splitext(f.name)
+                    instance = Photo.create_with_exif(exif_reader,
+                                                      filename,
+                                                      name=photo_name,
+                                                      original=f)
                     log.debug(f"Created {instance.__dict__}")
                     instance.save()
             return self.form_valid(form)
