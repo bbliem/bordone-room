@@ -1,7 +1,6 @@
-from datetime import date
 import logging
 import os
-import secrets
+from datetime import date
 
 from autoslug import AutoSlugField
 from django.conf import settings
@@ -10,17 +9,15 @@ from django.utils import timezone
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit
 
+from .storage import PhotoStorage
+
 log = logging.getLogger(__name__)
+photo_storage = PhotoStorage()
 
 def original_path(photo, filename):
     today = date.today()
-    # Add secret to filename in order to avoid guessing the names of photos
-    # without viewing permission
-    secret = secrets.token_hex(8)
-    base, extension = os.path.splitext(filename)
-    base = base[:80] # crop to 80 characters
-
-    return f'{photo.upload_date.year}/{photo.upload_date.month}/{photo.upload_date.day}/{base}_{secret}{extension}'
+    _, extension = os.path.splitext(filename)
+    return f'originals/{photo.upload_date.year}/{photo.upload_date.month}/{photo.upload_date.day}/{photo.slug}{extension}'
 
 
 class ThumbnailField(ImageSpecField):
@@ -28,7 +25,7 @@ class ThumbnailField(ImageSpecField):
         super().__init__(source=source,
                          format='JPEG',
                          options={'quality': 90,
-                                  'suffix': str(size)},
+                                  'thumbnail_size': size},
                          processors=[ResizeToFit(size, size)],
                          )
 
@@ -39,7 +36,7 @@ class Photo(models.Model):
     description = models.TextField()
     upload_date = models.DateTimeField(default=timezone.now)
     public = models.BooleanField(default=False)
-    original = models.ImageField(upload_to=original_path)
+    original = models.ImageField(upload_to=original_path, storage=photo_storage)
 
     # Thumbnails
     for size in settings.GALLERY_THUMBNAIL_SIZES:

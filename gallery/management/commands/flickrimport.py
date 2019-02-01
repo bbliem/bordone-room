@@ -57,19 +57,6 @@ class Command(BaseCommand):
                     date_imported = datetime.strptime(data['date_imported'], FLICKR_DATE_FORMAT)
                     date_imported = make_aware(date_imported)
 
-                    # Check if the image file already exists (to avoid
-                    # unnecessary copying or thumbnail generation)
-                    existing_original = None
-                    date_dir = f'{date_imported.year}/{date_imported.month}/{date_imported.day}'
-                    root, ext = os.path.splitext(new_basename)
-                    match = re.compile(f'{root}_[A-Za-z0-9]+{ext}').match
-                    date_path = f'{settings.MEDIA_ROOT}/{date_dir}'
-                    if os.path.isdir(date_path):
-                        for existing_file in os.listdir(date_path):
-                            if match(existing_file):
-                                existing_original = f'{date_dir}/{existing_file}'
-                                log.debug(f"Image {existing_original} already exists")
-
                     # Create model instance
                     with open(old_filename, 'rb') as pf:
                         photo = Photo.create_with_exif(exif_reader,
@@ -78,12 +65,13 @@ class Command(BaseCommand):
                                                        description=data['description'],
                                                        upload_date=date_imported,
                                                        public=public,
-                                                       #original=File(pf, name=new_basename))
+                                                       original=File(pf, name=new_basename),
                                                        )
-                        if existing_original:
-                            photo.original.name = existing_original
-                        else:
-                            photo.original = File(pf, name=new_basename)
+                        # if existing_original:
+                        #     # remove "original=... above
+                        #     photo.original.name = existing_original
+                        # else:
+                        #     photo.original = File(pf, name=new_basename)
 
                         photo.save()
                         log.debug(f"Upload date: {photo.upload_date}")

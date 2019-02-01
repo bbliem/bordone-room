@@ -73,7 +73,7 @@ class PhotoDetailView(generic.DetailView):
     model = Photo
     template_name = 'gallery/photo_detail.html'
 
-    # FIXME this causes a 404 error if the user has no permission, but we should report permission denied
+    # FIXME this causes a 404 error if the user has no permission, but we should probably report permission denied
     def get_queryset(self):
         queryset = super().get_queryset()
         if not self.request.user.is_authenticated:
@@ -201,7 +201,7 @@ class AlbumDetailView(CommonContextMixin, generic.DetailView):
     model = Album
     template_name = 'gallery/album_detail.html'
 
-    # FIXME this causes a 404 error if the user has no permission, but we should report permission denied
+    # FIXME this causes a 404 error if the user has no permission, but we should probably report permission denied
     def get_queryset(self):
         queryset = super().get_queryset()
         if not self.request.user.is_authenticated:
@@ -209,3 +209,44 @@ class AlbumDetailView(CommonContextMixin, generic.DetailView):
             # FIXME do something more reasonable
             queryset = queryset.select_related('cover_photo').filter(cover_photo__public=True)
         return queryset
+
+
+class ThumbnailServerView(generic.detail.BaseDetailView):
+    model = Photo
+
+    # FIXME this causes a 404 error if the user has no permission, but we should probably report permission denied
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if not self.request.user.is_authenticated:
+            queryset = queryset.filter(public=True)
+        return queryset
+
+    def get(self, request, *args, **kwargs):
+        photo = self.get_object()
+        size = kwargs['size']
+        with open(getattr(photo, f'thumbnail_{size}').path, 'rb') as f:
+            # FIXME photo may not always be JPEG. Perhaps use
+            # https://github.com/ahupp/python-magic or look at file name
+            # extension (and checking on upload if it's good).
+            return HttpResponse(f, content_type='image/jpeg')
+
+
+class OriginalServerView(generic.detail.BaseDetailView):
+    model = Photo
+
+    # FIXME this causes a 404 error if the user has no permission, but we should probably report permission denied
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if not self.request.user.is_authenticated:
+            queryset = queryset.filter(public=True)
+        return queryset
+
+    def render_to_response(self, context, **response_kwargs):
+        photo = self.object
+        with open(photo.original.path, 'rb') as f:
+            # FIXME photo may not always be JPEG. Perhaps use
+            # https://github.com/ahupp/python-magic or look at file name
+            # extension (and checking on upload if it's good).
+            response = HttpResponse(f, content_type='image/jpeg')
+            response['Content-Disposition'] = f'attachment; filename="{photo.name}.jpg"'
+            return response

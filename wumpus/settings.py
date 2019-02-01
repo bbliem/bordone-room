@@ -191,10 +191,11 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 0
 MEDIA_ROOT = decouple.config('MEDIA_ROOT')
 MEDIA_URL = '/media/'
 
-IMAGEKIT_CACHEFILE_DIR = '' # Put thumbnails in the same directory as originals
+IMAGEKIT_CACHEFILE_DIR = 'thumbnails' # Put thumbnails in the same directory as originals
 IMAGEKIT_SPEC_CACHEFILE_NAMER = 'gallery.namers.source_name_as_path'
+IMAGEKIT_DEFAULT_FILE_STORAGE = 'gallery.storage.ThumbnailStorage'
 
 # The first size will be the default preview size
-GALLERY_THUMBNAIL_SIZES = [240, 320, 500, 640, 800, 1024]
+GALLERY_THUMBNAIL_SIZES = [240, 320, 500, 640, 800, 1024, 1600, 2048]
 
 EXIFTOOL = decouple.config('EXIFTOOL', default='exiftool')
