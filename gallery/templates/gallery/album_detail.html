@@ -12,7 +12,9 @@
   {% if album.photos %}
     <div id="gallery">
       {% for photo in album.photos.all %}
-        <a href="{% url 'gallery:photo_detail' photo.slug %}">
+        <a href="{% url 'gallery:photo_detail' photo.slug %}"
+           data-fancybox="gallery"
+           data-srcset="{% for thumbnail in photo.thumbnails %}{{ thumbnail.url }} {{ thumbnail.width }}w{% if not forloop.last %}, {% endif %}{% endfor %}">
           <img alt="{{ photo.name }}" src="{{ photo.thumbnail.url }}">
         </a>
       {% endfor %}
