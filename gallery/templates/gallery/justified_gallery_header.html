@@ -4,12 +4,19 @@
 <script src="{% static 'gallery/jquery.justifiedGallery.min.js'%}" defer></script>
 {# Global variables that can be used in static javascript files #}
 <script>
-  var jgSizeRangeSuffixes = {
-    {% for size in thumbnail_sizes %}{{ size }}: '_{{ size }}', {% endfor %}
+  var jgThumbnailPath = function(currentPath, width, height, image) {
+    var max = Math.max(width, height);
+    var targetSize;
+    {% for size in thumbnail_sizes %}
+      {% if not forloop.first %}else {% endif %}{%if not forloop.last %}if(max <= {{ size }}){% endif %} {
+        targetSize = {{ size }};
+      }
+    {% endfor %}
+    return currentPath.replace(/(.*)\/([0-9]+)/, "$1/" + targetSize);
   };
   var jgRowHeight = {{ thumbnail_sizes.0 }};
   var jgDefaults = {
-    sizeRangeSuffixes: jgSizeRangeSuffixes,
+    thumbnailPath: jgThumbnailPath,
     rowHeight: jgRowHeight,
     margins: 3,
   };

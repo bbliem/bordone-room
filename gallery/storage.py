@@ -8,7 +8,6 @@ log = logging.getLogger(__name__)
 
 class PhotoStorage(FileSystemStorage):
     def url(self, name):
-        log.debug(f"Getting URL of original {name}")
         if self.base_url is None:
             raise ValueError("This file is not accessible via a URL.")
         # url = filepath_to_uri(name)
@@ -21,7 +20,6 @@ class PhotoStorage(FileSystemStorage):
 
 class ThumbnailStorage(FileSystemStorage):
     def url(self, name):
-        log.debug(f"Getting URL of thumbnail {name}")
         if self.base_url is None:
             raise ValueError("This file is not accessible via a URL.")
         *_, size, filename = pathlib.Path(name).parts
