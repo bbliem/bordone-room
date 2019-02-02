@@ -7,7 +7,7 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from imagekit.models import ImageSpecField
-from imagekit.processors import ResizeToFit
+from imagekit.processors import ResizeToFit, Transpose
 
 from .storage import PhotoStorage
 
@@ -26,7 +26,7 @@ class ThumbnailField(ImageSpecField):
                          format='JPEG',
                          options={'quality': 90,
                                   'thumbnail_size': size},
-                         processors=[ResizeToFit(size, size)],
+                         processors=[Transpose(Transpose.AUTO), ResizeToFit(size, size)],
                          )
 
 
