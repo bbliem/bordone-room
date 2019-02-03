@@ -210,6 +210,16 @@ class AlbumDetailView(CommonContextMixin, generic.DetailView):
             queryset = queryset.select_related('cover_photo').filter(cover_photo__public=True)
         return queryset
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        photos = self.object.photos
+        if not self.request.user.is_authenticated:
+            photos = photos.filter(public=True)
+        else:
+            photos = photos.all()
+        context['photos'] = photos
+        return context
+
 
 class ThumbnailServerView(generic.detail.BaseDetailView):
     model = Photo
