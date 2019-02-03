@@ -44,6 +44,8 @@ class CommonContextMixin(generic.base.ContextMixin):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['thumbnail_sizes'] = settings.GALLERY_THUMBNAIL_SIZES
+        context['jg_row_height'] = settings.JG_ROW_HEIGHT
+        context['jg_margins'] = settings.JG_MARGINS
         return context
 
 

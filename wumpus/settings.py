@@ -199,5 +199,8 @@ IMAGEKIT_DEFAULT_FILE_STORAGE = 'gallery.storage.ThumbnailStorage'
 GALLERY_THUMBNAIL_SIZES = [240, 320, 500, 640, 800, 1024, 1600, 2048]
 # When viewing a photo, we actually display a thumbnail of the following size, not the original
 PHOTO_DETAIL_THUMBNAIL_SIZE = 1600
+# Settings for Justified Gallery
+JG_ROW_HEIGHT = 320
+JG_MARGINS = 5
 
 EXIFTOOL = decouple.config('EXIFTOOL', default='exiftool')

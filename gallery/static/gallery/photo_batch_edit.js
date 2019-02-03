@@ -191,7 +191,7 @@ function closeEditSidebar() {
 
   $("#gallery").justifiedGallery({
     rowHeight: jgRowHeight,
-    margins: 3,
+    margins: jgMargins,
   }).selectable("destroy");
 }
 

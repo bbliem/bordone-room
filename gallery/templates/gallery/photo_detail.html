@@ -1,17 +1,26 @@
 {% extends "gallery/base.html" %}
 
+{% block header %}
+{{ block.super }}
+{% include "gallery/fancybox_header.html" %}
+{% endblock %}
+
 {% block content %}
 <main class="container">
   <h1>{{ photo.name }}</h1>
   <p>{{ photo.description }}</p>
-  <img src="{{ photo.photo_detail_thumbnail.url }}" alt="{{ photo.name }}">
-  <div class="row">
+  <img src="{{ photo.photo_detail_thumbnail.url }}"
+       alt="{{ photo.name }}"
+       data-fancybox
+       data-src="{{ photo.biggest_thumbnail.url }}"
+       data-caption="<i data-feather='calendar'></i>{{ photo.date_taken }}">
+  <div class="row m-3">
     <div class="col-sm"><i data-feather="calendar"></i>{{ photo.date_taken }}</div>
     <div class="col-sm"><i data-feather="camera"></i>{{ photo.model }}</div>
     <div class="col-sm"><i data-feather="circle"></i>{{ photo.lens }}</div>
     <div class="col-sm"><i data-feather="aperture"></i>f/{{ photo.aperture }}</div>
     <div class="col-sm">Focal length: {{ photo.focal_length }} mm</div>
-    <div class="col-sm"><i data-feather="clock"></i>{{ photo.shutter_speed }}</div>
+    <div class="col-sm"><i data-feather="clock"></i>{{ photo.shutter_speed_str }} s</div>
     <div class="col-sm">ISO {{ photo.iso }}</div>
   </div>
 </main>

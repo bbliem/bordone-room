@@ -1,3 +1,4 @@
+/* Color scheme: https://coolors.co/f9f9f9-a7a8aa-6f6866-38302e-e3b505 */
 body {
   font-family: 'Montserrat', sans-serif;
   background: #f9f9f9;
@@ -98,4 +99,53 @@ img {
 .dm-uploader {
   border: 0.25rem dashed #6f6866;
   text-align: center;
+}
+
+/* Override some Bootstrap colors */
+.page-link {
+  color: #38302e;
+  background-color: #f9f9f9;
+}
+
+.page-item.active .page-link {
+  background-color: #e3b505;
+  border-color: #e3b505;
+}
+
+.page-link:focus {
+  box-shadow: 0 0 0 .2rem rgba(227, 181, 5, 0.25);
+}
+
+.page-link:hover {
+  color: #38302e;
+  background-color: #fff;
+  border-color: #e3b505;
+}
+
+.btn-primary {
+  background-color: #6f6866;
+  border-color: #6f6866;
+}
+
+.btn-primary:hover {
+  background-color: #e3b505;
+  border-color: #e3b505;
+}
+
+/* Override some Justified Gallery styles */
+#gallery .caption {
+  display: block;
+  visibility: hidden;
+  background-color: #fff;
+  color: #000;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.2rem;
+  font-weight: normal;
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+#gallery .caption-visible {
+  visibility: visible;
+  opacity: 0.7;
 }

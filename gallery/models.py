@@ -72,6 +72,9 @@ class Photo(models.Model):
     def photo_detail_thumbnail(self):
         return getattr(self, f'thumbnail_{settings.PHOTO_DETAIL_THUMBNAIL_SIZE}')
 
+    def biggest_thumbnail(self):
+        return getattr(self, f'thumbnail_{settings.GALLERY_THUMBNAIL_SIZES[-1]}')
+
     def generate_thumbnails(self):
         log.debug(f"Generating thumbnails for photo {self.original}")
         for size in settings.GALLERY_THUMBNAIL_SIZES:
@@ -83,6 +86,13 @@ class Photo(models.Model):
         for size in settings.GALLERY_THUMBNAIL_SIZES:
             t = self.thumbnail(size)
             t.storage.delete(t.path)
+
+    def shutter_speed_str(self):
+        if self.shutter_speed >= 1:
+            return str(shutter_speed)
+        else:
+            inverse = round(1/self.shutter_speed)
+            return f"1/{inverse}"
 
 
 class Album(models.Model):

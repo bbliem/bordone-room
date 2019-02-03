@@ -14,15 +14,13 @@
     {% endfor %}
     return currentPath.replace(/(.*)\/([0-9]+)/, "$1/" + targetSize);
   };
-  var jgRowHeight = {{ thumbnail_sizes.0 }};
+  var jgRowHeight = {{ jg_row_height }};
+  var jgMargins = {{ jg_margins }};
   var jgDefaults = {
     thumbnailPath: jgThumbnailPath,
     rowHeight: jgRowHeight,
-    margins: 5,
+    margins: jgMargins,
   };
   var jgExtraParameters = {};
 </script>
 <script src="{% static 'gallery/run_justified_gallery.js'%}" defer></script>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.6/dist/jquery.fancybox.min.css" />
-<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.6/dist/jquery.fancybox.min.js" defer></script>

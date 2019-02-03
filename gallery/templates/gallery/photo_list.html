@@ -5,6 +5,7 @@
 {% block header %}
 {{ block.super }}
 {% include "gallery/justified_gallery_header.html" %}
+{% include "gallery/fancybox_header.html" %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'gallery/jquery-ui.min.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
@@ -74,14 +75,15 @@ document.addEventListener("DOMContentLoaded", function() {
   </div>
 
   {% if photo_list %}
-    <div id="gallery">
+    <div id="gallery" class="justified-gallery">
       {% for photo in photo_list %}
         <a href="{% url 'gallery:photo_detail' photo.slug %}"
            data-fancybox="gallery"
            data-srcset="{% for thumbnail in photo.thumbnails %}{{ thumbnail.url }} {{ thumbnail.width }}w{% if not forloop.last %}, {% endif %}{% endfor %}"
            data-width="{{ photo.photo_detail_thumbnail.width }}"
            data-height="{{ photo.photo_detail_thumbnail.height }}">
-          <img alt="{{ photo.name }}" src="{{ photo.thumbnail.url }}"
+          <img alt="{{ photo.name }}"
+               src="{{ photo.thumbnail.url }}"
                data-photo="{{ photo.id }}"
                data-albums="[{{ photo.album_set|sort_by:'id'|key_to_list:'id'|join:',' }}]"
                data-visibility="{% if photo.public %}public{% else %}private{% endif %}">
