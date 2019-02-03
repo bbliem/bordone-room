@@ -14,7 +14,9 @@
       {% for photo in photos.all %}
         <a href="{% url 'gallery:photo_detail' photo.slug %}"
            data-fancybox="gallery"
-           data-srcset="{% for thumbnail in photo.thumbnails %}{{ thumbnail.url }} {{ thumbnail.width }}w{% if not forloop.last %}, {% endif %}{% endfor %}">
+           data-srcset="{% for thumbnail in photo.thumbnails %}{{ thumbnail.url }} {{ thumbnail.width }}w{% if not forloop.last %}, {% endif %}{% endfor %}"
+           data-width="{{ photo.original.width }}"
+           data-height="{{ photo.original.height }}">
           <img alt="{{ photo.name }}" src="{{ photo.thumbnail.url }}">
         </a>
       {% endfor %}
