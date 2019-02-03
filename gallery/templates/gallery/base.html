@@ -57,16 +57,10 @@ document.addEventListener('DOMContentLoaded', function() {
     </ul>
 
     <ul class="navbar-nav d-flex align-items-baseline">
-      {% if perms.gallery.add_photo %}
-        <li class="nav-item p-1">
-          <a href="#" role="button" class="btn btn-outline-light btn-lg" data-toggle="modal" data-target="#upload-modal"><i data-feather="upload"></i>Upload</a>
-        </li>
-      {% endif %}
-
       {% if user.is_authenticated %}
         <li class="nav-item p-1">
           <div class="dropdown">
-            <a href="#" role="button" class="btn btn-link text-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Logged in as TODO</a>
+            <a href="#" role="button" class="btn btn-link text-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i data-feather="user"></i>{{ user.username }}</a>
             <div class="dropdown-menu">
               <a class="dropdown-item" href="{% url 'gallery:logout' %}?next={{ request.get_full_path }}"><i data-feather="log-out"></i>Log out</a>
             </div>
@@ -76,33 +70,30 @@ document.addEventListener('DOMContentLoaded', function() {
         <li class="nav-item p-1">
           <div class="dropdown">
             <a href="#" role="button" class="btn btn-outline-light btn-lg dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i data-feather="log-in"></i>Log in</a>
-            <div class="dropdown-menu dropdown-menu-right">
+            <div class="dropdown-menu dropdown-menu-right" style="width: 250px">
               <form class="px-4 py-3" method="post" action="{% url 'gallery:login' %}">
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{{ request.get_full_path }}">
                 <div class="form-group">
-                  <label for="id_username" class="sr-only">Username</label>
+                  <label for="id_username">Username</label>
                   <input type="text" class="form-control" id="id_username" name="username" placeholder="Username">
                 </div>
                 <div class="form-group">
-                  <label for="id_password" class="sr-only">Password</label>
+                  <label for="id_password">Password</label>
                   <input type="password" class="form-control" id="id_password" name="password" placeholder="Password">
                 </div>
                 <button type="submit" class="btn btn-primary btn-block">Log in</button>
               </form>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Forgot password? (TODO)</a>
             </div>
           </div>
         </li>
       {% endif %}
 
-        <!-- XXX don't offer registration for now? -->
-        <!--
+      {% if perms.gallery.add_photo %}
         <li class="nav-item p-1">
-          <a href="#" class="btn btn-primary btn-lg">Sign up</a>
+          <a href="#" role="button" class="btn btn-outline-light btn-lg" data-toggle="modal" data-target="#upload-modal"><i data-feather="upload"></i>Upload</a>
         </li>
-        -->
+      {% endif %}
       </ul>
   </div>
 </nav>
