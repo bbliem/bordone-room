@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <div class="dropdown">
             <a href="#" role="button" class="btn btn-link text-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Logged in as TODO</a>
             <div class="dropdown-menu">
-              <a class="dropdown-item" href="{% url 'gallery:logout' %}"><i data-feather="log-out"></i>Log out</a>
+              <a class="dropdown-item" href="{% url 'gallery:logout' %}?next={{ request.get_full_path }}"><i data-feather="log-out"></i>Log out</a>
             </div>
           </div>
         </li>
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="dropdown-menu dropdown-menu-right">
               <form class="px-4 py-3" method="post" action="{% url 'gallery:login' %}">
                 {% csrf_token %}
-                <input type="hidden" name="next" value="">
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
                 <div class="form-group">
                   <label for="id_username" class="sr-only">Username</label>
                   <input type="text" class="form-control" id="id_username" name="username" placeholder="Username">
