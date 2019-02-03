@@ -1,4 +1,5 @@
 from django.contrib.auth import views as auth_views
+from django.contrib.flatpages.views import flatpage
 from django.urls import path
 from django.views.generic.base import RedirectView
 
@@ -17,4 +18,10 @@ urlpatterns = [
     path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('media/thumbnails/<slug:slug>/<int:size>', views.ThumbnailServerView.as_view(), name='serve_thumbnail'),
     path('media/originals/<slug:slug>', views.OriginalServerView.as_view(), name='serve_original'),
+]
+
+# Flat pages
+urlpatterns += [
+    path('about/', flatpage, {'url': '/about/'}, name='about'),
+    path('contact/', flatpage, {'url': '/contact/'}, name='contact'),
 ]

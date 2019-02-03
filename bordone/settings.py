@@ -37,9 +37,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.flatpages',
     'imagekit',
     'widget_tweaks',
 ]
+
+# We only serve one site, but we need the sites framework for flatpages.
+# https://docs.djangoproject.com/en/2.1/ref/contrib/flatpages/
+SITE_ID = 1
 
 if DEBUG:
     INSTALLED_APPS += [
@@ -55,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 ]
 
 if DEBUG:

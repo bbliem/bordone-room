@@ -1,0 +1,13 @@
+{% extends "gallery/base.html" %}
+{% load static %}
+{% load custom_tags %}
+
+{% block content %}
+<main class="container">
+  <div class="d-flex align-items-baseline">
+    <h1 class="float-left flex-grow-1">{{ flatpage.title }}</h1>
+  </div>
+
+  {{ flatpage.content }}
+</main>
+{% endblock %}

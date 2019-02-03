@@ -1,9 +1,15 @@
 {% spaceless %}
-{% load static %}
+
 {% load custom_tags %}
+{% load flatpages %}
+{% load static %}
+
+{% get_flatpages as flatpages %}
+
 {% url 'gallery:index' as index_url %}
 {% url 'gallery:photo_list' as photo_list_url %}
 {% url 'gallery:album_list' as album_list_url %}
+
 {% endspaceless %}<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
+    <ul class="navbar-nav mr-auto align-items-baseline">
       <li class="nav-item p-1 {% active request photo_list_url %}">
         <a class="nav-link" href="{{ photo_list_url }}">
           <i data-feather="camera"></i>
@@ -54,6 +60,21 @@ document.addEventListener('DOMContentLoaded', function() {
           Albums
         </a>
       </li>
+      {% for flatpage in flatpages %}
+        <li class="nav-item p-1 {% active request flatpage.url %}">
+          <a class="nav-link" href="{{ flatpage.url }}">
+            {% spaceless %}
+              {# XXX it would be better to customize flatpages or use a CMS for this #}
+              {% if flatpage.title == "About" %}
+                <i data-feather="info"></i>
+              {% elif flatpage.title == "Contact" %}
+                <i data-feather="mail"></i>
+              {% endif %}
+              {{ flatpage.title }}
+            {% endspaceless %}
+          </a>
+        </li>
+      {% endfor %}
     </ul>
 
     <ul class="navbar-nav d-flex align-items-baseline">
