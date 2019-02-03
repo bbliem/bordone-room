@@ -69,6 +69,9 @@ class Photo(models.Model):
         for size in settings.GALLERY_THUMBNAIL_SIZES:
             yield getattr(self, f'thumbnail_{size}')
 
+    def photo_detail_thumbnail(self):
+        return getattr(self, f'thumbnail_{settings.PHOTO_DETAIL_THUMBNAIL_SIZE}')
+
     def generate_thumbnails(self):
         log.debug(f"Generating thumbnails for photo {self.original}")
         for size in settings.GALLERY_THUMBNAIL_SIZES:

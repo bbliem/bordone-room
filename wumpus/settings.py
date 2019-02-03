@@ -197,5 +197,7 @@ IMAGEKIT_DEFAULT_FILE_STORAGE = 'gallery.storage.ThumbnailStorage'
 
 # The first size will be the default preview size
 GALLERY_THUMBNAIL_SIZES = [240, 320, 500, 640, 800, 1024, 1600, 2048]
+# When viewing a photo, we actually display a thumbnail of the following size, not the original
+PHOTO_DETAIL_THUMBNAIL_SIZE = 1600
 
 EXIFTOOL = decouple.config('EXIFTOOL', default='exiftool')
