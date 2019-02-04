@@ -3,23 +3,13 @@
 {% block header %}
 {{ block.super }}
 {% include "gallery/justified_gallery_header.html" %}
-<script>
-  Object.assign(jgExtraParameters, {
-    cssAnimation: false,
-    captionSettings: {
-      animationDuration: 500,
-      visibleOpacity: 0.7,
-      nonVisibleOpacity: 0.7
-    }
-  });
-</script>
 {% endblock %}
 
 {% block content %}
 <main class="container">
   <h1>Albums</h1>
   {% if album_list %}
-    <div id="gallery">
+    <div id="gallery" class="always-show-captions">
       {% for album in album_list %}
         <a href="{% url 'gallery:album_detail' album.slug %}">
           {% if album.cover_photo %}

@@ -135,17 +135,24 @@ img {
 /* Override some Justified Gallery styles */
 #gallery .caption {
   display: block;
-  visibility: hidden;
   background-color: #fff;
   color: #000;
   font-family: 'Montserrat', sans-serif;
   font-size: 1.2rem;
   font-weight: normal;
+}
+
+#gallery.always-show-captions .caption {
+  opacity: 0.7;
+}
+
+#gallery:not(.always-show-captions) .caption {
+  visibility: hidden;
   transition: all 0.3s ease;
   opacity: 0;
 }
 
-#gallery .caption-visible {
+#gallery:not(.always-show-captions) .caption-visible {
   visibility: visible;
   opacity: 0.7;
 }
