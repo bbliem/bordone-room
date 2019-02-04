@@ -63,8 +63,9 @@ class PhotoListView(CommonContextMixin, generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['upload_form'] = PhotoUploadForm()
-        context['albums'] = Album.objects.order_by('-creation_date')
+        #context['upload_form'] = PhotoUploadForm()
+        context['album_list'] = Album.objects.order_by('-creation_date')
+        context['page_title'] = "Photos"
         return context
 
     def post(self, request, *args, **kwargs):
@@ -201,7 +202,7 @@ class AlbumCreateView(PermissionRequiredMixin, generic.CreateView):
 
 class AlbumDetailView(CommonContextMixin, generic.DetailView):
     model = Album
-    template_name = 'gallery/album_detail.html'
+    template_name = 'gallery/photo_list.html'
 
     # FIXME this causes a 404 error if the user has no permission, but we should probably report permission denied
     def get_queryset(self):
@@ -219,7 +220,11 @@ class AlbumDetailView(CommonContextMixin, generic.DetailView):
             photos = photos.filter(public=True)
         else:
             photos = photos.all()
-        context['photos'] = photos
+        context['photo_list'] = photos
+        context['album_list'] = Album.objects.order_by('-creation_date')
+        album = self.object
+        context['page_title'] = album.title
+        context['page_description'] = album.description
         return context
 
 

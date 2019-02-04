@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function() {
   <div>
     <label for="select-albums">Albums</label>
     <select id="select-albums" class="selectpicker selection-required" multiple data-live-search="true" data-selected-text-format="count" data-actions-box="true" data-header="Albums of selected photos" data-width="300px">
-      {% for album in albums %}
+      {% for album in album_list %}
         <option value="{{ album.id }}">{{ album.title }}</option>
       {% endfor %}
     </select>
@@ -68,11 +68,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
 <main class="container">
   <div class="d-flex align-items-baseline">
-    <h1 class="float-left flex-grow-1">Photos</h1>
+    <h1 class="float-left flex-grow-1">{{ page_title }}</h1>
     {% if perms.gallery.change_photo %}
       <button class="btn float-right" id="open-edit-sidebar-button" onclick="openEditSidebar()"><i data-feather="edit" title="Edit"></i></button>
     {% endif %}
   </div>
+
+  {% if page_description %}
+    <p>{{ page_description }}</p>
+  {% endif %}
 
   {% if photo_list %}
     <div id="gallery" class="justified-gallery">
@@ -143,18 +147,19 @@ document.addEventListener("DOMContentLoaded", function() {
       </div>
     {% endif %}
   {% else %}
-    <p>There are no photos.</p>
+    <p>There are no photos to display.</p>
   {% endif %}
 </main>
 
-{# TODO #}
-<!--<section>-->
-<!--  <h1>Upload</h1>-->
-<!--  <form enctype="multipart/form-data" method="post" action="{% url 'gallery:photo_list' %}">-->
-<!--    {% csrf_token %}-->
-<!--    {{ upload_form }}-->
-<!--    [><input type="file" name="photos" multiple><]-->
-<!--    <input type="submit" value="Upload">-->
-<!--  </form>-->
-<!--</section>-->
+{% comment %}
+<section>
+  <h1>Upload</h1>
+  <form enctype="multipart/form-data" method="post" action="{% url 'gallery:photo_list' %}">
+    {% csrf_token %}
+    {{ upload_form }}
+    [><input type="file" name="photos" multiple><]
+    <input type="submit" value="Upload">
+  </form>
+</section>
+{% endcomment %}
 {% endblock %}
