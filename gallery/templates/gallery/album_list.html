@@ -9,7 +9,7 @@
 <main class="container">
   <h1>Albums</h1>
   {% if album_list %}
-    <div id="gallery" class="always-show-captions">
+    <div id="gallery" class="justified-gallery always-show-captions">
       {% for album in album_list %}
         <a href="{% url 'gallery:album_detail' album.slug %}">
           {% if album.cover_photo %}
