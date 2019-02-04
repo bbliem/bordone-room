@@ -53,7 +53,7 @@ class Photo(models.Model):
     iso = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
-        return f'[untitled photo {self.id}]'
+        return f'Photo {self.slug}'
 
     @classmethod
     def create_with_exif(cls, exif_reader, filename, **kwargs):
