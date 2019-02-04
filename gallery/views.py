@@ -97,7 +97,7 @@ class PhotoDetailView(generic.DetailView):
         log.debug(f"Updating photo {photo}")
 
         # Get albums
-        if(data.get('albums')):
+        if data.get('albums') is not None:
             try:
                 albums = [Album.objects.get(id=album_id)
                           for album_id in data.get('albums')]
