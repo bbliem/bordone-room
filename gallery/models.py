@@ -33,7 +33,7 @@ class ThumbnailField(ImageSpecField):
 class Photo(models.Model):
     name = models.CharField(max_length=200)
     slug = AutoSlugField(populate_from='name', unique=True, null=True)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     upload_date = models.DateTimeField(default=timezone.now)
     public = models.BooleanField(default=False)
     original = models.ImageField(upload_to=original_path, storage=photo_storage)
