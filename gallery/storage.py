@@ -6,7 +6,17 @@ from django.core.files.storage import FileSystemStorage
 
 log = logging.getLogger(__name__)
 
-class PhotoStorage(FileSystemStorage):
+
+class OverwriteMixin:
+    def get_available_name(self, name, max_length=None):
+        # https://timonweb.com/posts/imagefield-overwrite-file-if-file-with-the-same-name-exists/
+        # If the filename already exists, remove it as if it was a true file system
+        if self.exists(name):
+            self.delete(name)
+        return name
+
+
+class PhotoStorage(OverwriteMixin, FileSystemStorage):
     def url(self, name):
         if self.base_url is None:
             raise ValueError("This file is not accessible via a URL.")
@@ -18,7 +28,7 @@ class PhotoStorage(FileSystemStorage):
         return f'{self.base_url}originals/{slug}'
 
 
-class ThumbnailStorage(FileSystemStorage):
+class ThumbnailStorage(OverwriteMixin, FileSystemStorage):
     def url(self, name):
         if self.base_url is None:
             raise ValueError("This file is not accessible via a URL.")

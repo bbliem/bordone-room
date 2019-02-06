@@ -194,6 +194,10 @@ MEDIA_URL = '/media/'
 IMAGEKIT_CACHEFILE_DIR = 'thumbnails' # Put thumbnails in the same directory as originals
 IMAGEKIT_SPEC_CACHEFILE_NAMER = 'gallery.namers.source_name_as_path'
 IMAGEKIT_DEFAULT_FILE_STORAGE = 'gallery.storage.ThumbnailStorage'
+# We take care of generating thumbnails ourselves when photos are uploaded and
+# we do not need (or want to) generate them when access to a thumbnail is
+# attempted.
+IMAGEKIT_DEFAULT_CACHEFILE_STRATEGY = 'imagekit.cachefiles.strategies.Optimistic'
 
 # The first size will be the default preview size
 GALLERY_THUMBNAIL_SIZES = [240, 320, 500, 640, 800, 1024, 1600, 2048]

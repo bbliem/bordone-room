@@ -78,7 +78,7 @@ class Photo(models.Model):
     def generate_thumbnails(self):
         log.debug(f"Generating thumbnails for photo {self.original}")
         for size in settings.GALLERY_THUMBNAIL_SIZES:
-            self.thumbnail(size).generate()
+            self.thumbnail(size).generate(force=True)
 
     def delete_files(self):
         log.debug(f"Deleting files for photo {self.original}")
