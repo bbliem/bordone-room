@@ -5,7 +5,7 @@ from .models import Album
 
 class PhotoAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {'fields': ['name', 'description', 'public', 'original']}),
+        (None, {'fields': ['name', 'description', 'upload_date', 'public', 'original']}),
         ('Metadata', {'fields': ['date_taken',
                                  'make',
                                  'model',
@@ -17,8 +17,8 @@ class PhotoAdmin(admin.ModelAdmin):
                                  ],
                       'classes': ['collapse']}),
         ]
-    list_display = ('name', 'original', 'date_taken')
-    list_filter = ['date_taken']
+    list_display = ('name', 'original', 'date_taken', 'upload_date')
+    list_filter = ['date_taken', 'upload_date']
     search_fields = ['name', 'original']
 
 admin.site.register(Photo, PhotoAdmin)
