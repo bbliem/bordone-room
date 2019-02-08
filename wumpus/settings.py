@@ -94,7 +94,7 @@ LOGGING = {
         'loggers': {
             'gallery': {
                 'handlers': ['console'],
-                'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+                'level': decouple.config('LOG_LEVEL', default='INFO'),
                 },
             },
         }
@@ -168,6 +168,10 @@ if not DEBUG:
     SECURE_SSL_REDIRECT = True
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+
+# Testing
+TEST_RUNNER = 'gallery.runner.CustomDiscoverRunner'
 
 
 # Static files (CSS, JavaScript, Images)
