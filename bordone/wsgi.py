@@ -1,5 +1,5 @@
 """
-WSGI config for wumpus project.
+WSGI config for the Bordone project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'wumpus.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bordone.settings')
 
 application = get_wsgi_application()
