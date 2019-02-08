@@ -90,11 +90,27 @@ LOGGING = {
             'console': {
                 'class': 'logging.StreamHandler',
                 },
+            'djangologfile': {
+                'class': 'logging.handlers.RotatingFileHandler',
+                'filename': os.path.join(BASE_DIR, 'django.log'),
+                'maxBytes': 1024*1024*15, # 15MB
+                'backupCount': 10,
+                },
+            'applogfile': {
+                'class': 'logging.handlers.RotatingFileHandler',
+                'filename': os.path.join(BASE_DIR, 'gallery.log'),
+                'maxBytes': 1024*1024*15, # 15MB
+                'backupCount': 10,
+                },
             },
         'loggers': {
+            'django': {
+                'handlers': ['console', 'djangologfile'],
+                'level': decouple.config('DJANGO_LOG_LEVEL', default='INFO'),
+                },
             'gallery': {
-                'handlers': ['console'],
-                'level': decouple.config('LOG_LEVEL', default='INFO'),
+                'handlers': ['console', 'applogfile'],
+                'level': decouple.config('GALLERY_LOG_LEVEL', default='INFO'),
                 },
             },
         }
