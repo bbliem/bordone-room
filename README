@@ -5,6 +5,3 @@ pip install --user git+https://github.com/smarnach/pyexiftool.git
 Forget that, I forked it and made some modifications:
 
 pip install --user git+https://github.com/bbliem/pyexiftool.git
-
-Also, the version of django-autoslug in PyPI does not support Django 2. For now:
-pip install --user git+https://github.com/justinmayer/django-autoslug
