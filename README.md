@@ -55,6 +55,30 @@ Instructions for deploying the application can be found in the [Django
 documentation](https://docs.djangoproject.com/en/2.1/howto/deployment/wsgi/).
 
 
+## Usage
+
+For uploading photos, creating albums and editing content, a user account is
+required. At the moment, users cannot register via the web. To create a user
+account, use the `manage.py` script in the project root as follows:
+
+```
+manage.py createsuperuser
+```
+
+Photos can be uploaded using the web interface after logging in. When a photo
+is uploaded, its visibility is initially set to private. That is, only
+logged-in users can see it. To make photos publicly available, make sure you
+are logged in, then click the edit button, select the respective photos and
+click the *Public* checkbox. In the edit menu, photos can also be arranged into
+albums or deleted.
+
+A more low-level interface for changing content is provided by the *admin
+interface*, which can be accessed in your browser using the path `/admin/`.
+
+At the moment, the admin interface is the only way to add or edit albums, but
+we will probably provide a user-friendly interface soon.
+
+
 ## License
 
 Bordone Room is free software licensed under the GNU General Public License
