@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timezone
 from io import BytesIO
 from unittest import mock
@@ -10,11 +11,11 @@ from PIL import Image
 from .exif_reader import ExifReader
 from .models import Photo
 
-def create_image(filename, size=(10,10), color='black'):
+def create_image(color='black', size=(10,10)):
     buf = BytesIO()
     image = Image.new('RGB', size=size, color=color)
     image.save(buf, 'JPEG')
-    return ImageFile(buf, name=filename)
+    return ImageFile(buf, name=f'{color}.jpg')
 
 
 def verify_image_file(path):
@@ -89,17 +90,13 @@ class ExifReaderTests(TestCase):
 class PhotoModelTests(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.images = {}
-        for color in ('black', 'green'):
-            cls.images[color] = create_image(f'{color}.jpg', color=color)
-
         cls.black_photo = cls.create_photo('black')
 
     @classmethod
     def create_photo(cls, color='green'):
         return Photo.objects.create(
             name=f'{color} photo',
-            original=cls.images[color],
+            original=create_image(color),
         )
 
     @mock.patch.object(Photo, 'generate_thumbnails')
@@ -107,14 +104,15 @@ class PhotoModelTests(TestCase):
         self.create_photo()
         self.assertTrue(mock_generate_thumbnails.called)
 
-    @mock.patch.object(Photo, 'generate_thumbnails')
-    def test_thumbnails_updated_after_original_changed(self, mock_generate_thumbnails):
-        self.assertEqual(mock_generate_thumbnails.call_count, 0)
+    def test_thumbnails_updated_after_original_changed(self):
         green_photo = self.create_photo('green')
-        self.assertEqual(mock_generate_thumbnails.call_count, 1)
-        green_photo.original = self.images['black']
-        green_photo.save()
-        self.assertEqual(mock_generate_thumbnails.call_count, 2)
+        with mock.patch.object(green_photo,
+                               'generate_thumbnails',
+                               wraps=green_photo.generate_thumbnails) as mock_generate_thumbnails:
+            self.assertFalse(mock_generate_thumbnails.called)
+            green_photo.original = create_image('red')
+            green_photo.save()
+            self.assertTrue(mock_generate_thumbnails.called)
 
     def test_original_file_created(self):
         verify_image_file(self.black_photo.original.path)
@@ -122,3 +120,16 @@ class PhotoModelTests(TestCase):
     def test_thumbnail_files_created(self):
         for thumbnail in self.black_photo.thumbnails():
             verify_image_file(thumbnail.path)
+
+    def test_original_file_deleted(self):
+        photo = self.create_photo()
+        path = photo.original.path
+        photo.delete()
+        self.assertFalse(os.path.isfile(path))
+
+    def test_thumbnail_files_deleted(self):
+        photo = self.create_photo()
+        paths = [t.path for t in photo.thumbnails()]
+        photo.delete()
+        for path in paths:
+            self.assertFalse(os.path.isfile(path))

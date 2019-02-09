@@ -4,7 +4,7 @@ from datetime import date
 
 from autoslug import AutoSlugField
 from django.conf import settings
-from django.db import models
+from django.db import models, transaction
 from django.utils import timezone
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit, Transpose
@@ -52,14 +52,14 @@ class Photo(models.Model):
     shutter_speed = models.FloatField(blank=True, null=True)
     iso = models.IntegerField(blank=True, null=True)
 
-    def __str__(self):
-        return f'Photo {self.slug}'
-
     @classmethod
     def create_with_exif(cls, exif_reader, filename, **kwargs):
         """kwargs are passed to constructor after being updated with EXIF information."""
         kwargs.update(exif_reader.tags(filename))
         return cls(**kwargs)
+
+    def __str__(self):
+        return f'Photo {self.slug}'
 
     def thumbnail(self, size=settings.GALLERY_THUMBNAIL_SIZES[0]):
         assert size in settings.GALLERY_THUMBNAIL_SIZES
@@ -93,6 +93,40 @@ class Photo(models.Model):
         else:
             inverse = round(1/self.shutter_speed)
             return f"1/{inverse}"
+
+    @transaction.atomic
+    def save(self, *args, **kwargs):
+        """
+        Save the model instance and create thumbnails.
+
+        We do this in an atomic transaction because otherwise we'd have a model
+        instance without the files lying around for some time. We can't just
+        generate the thumbnails before saving the instance because then the
+        original, from which the thumbnails are generated, is not in the
+        storage yet.
+        """
+        created = self.pk is None
+        super().save(*args, **kwargs)
+
+        # We regenerate thumbnails if the instance has been created or the file
+        # modification date of the thumbnails is older than the original.
+        if created:
+            log.debug(f"Model instance created: {self}")
+            self.generate_thumbnails()
+        else:
+            log.debug(f"Model instance updated: {self}")
+            thumbnail = self.thumbnail()
+            thumbnail_mtime = thumbnail.storage.get_modified_time(thumbnail.name)
+            original_mtime = self.original.storage.get_modified_time(self.original.name)
+            if thumbnail_mtime < original_mtime:
+                self.generate_thumbnails()
+
+    @transaction.atomic
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        # XXX Perhaps we don't want this in production
+        log.debug(f"Model instance deleted: {self}")
+        self.delete_files()
 
 
 class Album(models.Model):
