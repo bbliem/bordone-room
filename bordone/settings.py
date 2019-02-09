@@ -211,7 +211,7 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 0
 MEDIA_ROOT = decouple.config('MEDIA_ROOT')
 MEDIA_URL = '/media/'
 
-IMAGEKIT_CACHEFILE_DIR = 'thumbnails' # Put thumbnails in the same directory as originals
+IMAGEKIT_CACHEFILE_DIR = 'thumbnails' # Put thumbnails in this subdirectory of MEDIA_ROOT
 IMAGEKIT_SPEC_CACHEFILE_NAMER = 'gallery.namers.source_name_as_path'
 IMAGEKIT_DEFAULT_FILE_STORAGE = 'gallery.storage.ThumbnailStorage'
 # We take care of generating thumbnails ourselves when photos are uploaded and
