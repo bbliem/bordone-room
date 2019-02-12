@@ -10,6 +10,9 @@
 <link rel="stylesheet" type="text/css" href="{% static 'gallery/jquery-ui.min.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
 
+{% if perms.gallery.change_photo %}
+<script src="{% static 'gallery/photo_batch_edit.js' %}" defer></script>
+{% endif %}
 <script src="{% static 'gallery/jquery-ui.min.js'%}" defer></script>
 {# XXX Some Bootstrap components do not require Papper.js or Bootstrap JS, check which are needed #}
 <script src='{% static 'gallery/js.cookie.js' %}' defer></script>
@@ -36,7 +39,6 @@ document.addEventListener("DOMContentLoaded", function() {
   initAlbumsSelector();
 });
 </script>
-<script src="{% static 'gallery/photo_batch_edit.js' %}" defer></script>
 {% endblock %}
 
 {% block content %}
@@ -97,53 +99,55 @@ document.addEventListener("DOMContentLoaded", function() {
 
     {% if is_paginated %}
       <div class="mt-3 d-flex justify-content-center">
-        <ul class="pagination">
-          {% if page_obj.has_previous %}
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&#8249;</a></li>
-          {% else %}
-            <li class="page-item disabled"><a class="page-link" href="#">&#8249;</a></li>
-          {% endif %}
+        {% spaceless %}
+          <ul class="pagination">
+            {% if page_obj.has_previous %}
+              <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&#8249;</a></li>
+            {% else %}
+              <li class="page-item disabled"><a class="page-link" href="#">&#8249;</a></li>
+            {% endif %}
 
-          {% if page_obj.number > 5 %}
-            <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.number|add:'-3' }}">&hellip;</a></li>
-            {% for i in page_obj.paginator.page_range %}{# XXX Inefficient, but iterating over a certain range isn't provided by Django. #}
-              {% if i >= page_obj.number|add:'-2' and i < page_obj.number %}
-                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-              {% endif %}
-            {% endfor %}
-          {% else %}
-            {% for i in page_obj.paginator.page_range %}{# XXX #}
-              {% if i < page_obj.number %}
-                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-              {% endif %}
-            {% endfor %}
-          {% endif %}
+            {% if page_obj.number > 5 %}
+              <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+              <li class="page-item"><a class="page-link" href="?page={{ page_obj.number|add:'-3' }}">&hellip;</a></li>
+              {% for i in page_obj.paginator.page_range %}{# XXX Inefficient, but iterating over a certain range isn't provided by Django. #}
+                {% if i >= page_obj.number|add:'-2' and i < page_obj.number %}
+                  <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              {% for i in page_obj.paginator.page_range %}{# XXX #}
+                {% if i < page_obj.number %}
+                  <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
 
-          <li class="page-item active"><a class="page-link" href="#">{{ page_obj.number }} <span class="sr-only">(current)</span></a></li>
+            <li class="page-item active"><a class="page-link" href="#">{{ page_obj.number }} <span class="sr-only">(current)</span></a></li>
 
-          {% if page_obj.number < page_obj.paginator.num_pages|add:'-4' %}
-            {% for i in page_obj.paginator.page_range %}{# XXX #}
-              {% if i > page_obj.number and i <= page_obj.number|add:'2' %}
-                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-              {% endif %}
-            {% endfor %}
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.number|add:'3' }}">&hellip;</a></li>
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a></li>
-          {% else %}
-            {% for i in page_obj.paginator.page_range %}{# XXX #}
-              {% if i > page_obj.number %}
-                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-              {% endif %}
-            {% endfor %}
-          {% endif %}
+            {% if page_obj.number < page_obj.paginator.num_pages|add:'-4' %}
+              {% for i in page_obj.paginator.page_range %}{# XXX #}
+                {% if i > page_obj.number and i <= page_obj.number|add:'2' %}
+                  <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+              {% endfor %}
+              <li class="page-item"><a class="page-link" href="?page={{ page_obj.number|add:'3' }}">&hellip;</a></li>
+              <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a></li>
+            {% else %}
+              {% for i in page_obj.paginator.page_range %}{# XXX #}
+                {% if i > page_obj.number %}
+                  <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
 
-          {% if page_obj.has_next %}
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&#8250;</a></li>
-          {% else %}
-            <li class="page-item disabled"><a class="page-link" href="#">&#8250;</a></li>
-          {% endif %}
-        </ul>
+            {% if page_obj.has_next %}
+              <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&#8250;</a></li>
+            {% else %}
+              <li class="page-item disabled"><a class="page-link" href="#">&#8250;</a></li>
+            {% endif %}
+          </ul>
+        {% endspaceless %}
       </div>
     {% endif %}
   {% else %}
