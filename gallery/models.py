@@ -88,7 +88,9 @@ class Photo(models.Model):
             t.storage.delete(t.path)
 
     def shutter_speed_str(self):
-        if self.shutter_speed >= 1:
+        if not self.shutter_speed:
+            return None
+        elif self.shutter_speed >= 1:
             return str(shutter_speed)
         else:
             inverse = round(1/self.shutter_speed)
