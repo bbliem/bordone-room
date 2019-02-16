@@ -91,7 +91,7 @@ class Photo(models.Model):
         if not self.shutter_speed:
             return None
         elif self.shutter_speed >= 1:
-            return str(shutter_speed)
+            return str(self.shutter_speed)
         else:
             inverse = round(1/self.shutter_speed)
             return f"1/{inverse}"
