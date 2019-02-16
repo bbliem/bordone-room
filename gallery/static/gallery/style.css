@@ -156,3 +156,95 @@ img {
   visibility: visible;
   opacity: 0.7;
 }
+
+/* Modified version of https://codepen.io/fancyapps/full/pxovaa */
+/* Custom button design */
+.fancybox-button {
+  background: transparent;
+  color: #eee;
+  border-radius: 4px;
+}
+
+.fancybox-toolbar .fancybox-button:hover {
+  background: #777;
+  color: #e3b505;
+}
+
+/* Navigation arrows */
+.fancybox-navigation .fancybox-button {
+  z-index: 99996;
+}
+
+.fancybox-navigation .fancybox-button div {
+  padding: 0;
+}
+
+.fancybox-navigation .fancybox-button[disabled],
+.fancybox-navigation .fancybox-button[disabled]:hover {
+  color: #888;
+}
+
+.fancybox-navigation .fancybox-button:hover {
+  color: #000;
+}
+
+/* Initially hide the image-info */
+.image-info {
+  display: none;
+}
+
+.image-info-icon {
+  float: left;
+  clear: both;
+  line-height: 1.7em;
+  width: 24px;
+  margin-right: 4px;
+  text-align: right;
+}
+
+.image-info-data {
+  display: block;
+  overflow: hidden;
+  line-height: 1.7em;
+  margin-bottom: 1em;
+}
+
+/* Change position and design of image-info area */
+.fancybox-caption {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: auto;
+  padding: 0;
+  width: 300px;
+  background: #222;
+  color: #fff;
+  box-shadow: 0 0 20px #111;
+  z-index: 99996;
+  text-align: left;
+
+  /* Hide next to right edge */
+  transform: translate3d(320px, 0, 0);
+}
+
+.fancybox-caption::before {
+  display: none;
+}
+
+.fancybox-caption > div {
+  margin-top: 44px;
+  padding: 20px;
+  max-height: calc(100vh - 44px);
+  overflow: auto;
+}
+
+/* Overwrite the default animation */
+.fancybox-show-caption .fancybox-caption,
+.fancybox-caption {
+  transition: transform .2s;
+}
+
+/* Reveal caption */
+.fancybox-show-caption.fancybox-vertical-caption .fancybox-caption {
+  transform: translate3d(0, 0, 0);
+}

@@ -18,7 +18,6 @@
 {% block header %}
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 <link rel="stylesheet" href="{% static 'gallery/jquery.dm-uploader.min.css' %}">
-<link rel="stylesheet" href="{% static 'gallery/style.css' %}">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -36,6 +35,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 {% endblock %}
+{# Add this at the very end because we want to override all other styles #}
+<link rel="stylesheet" href="{% static 'gallery/style.css' %}">
 <title>Bordone Room</title>
 </head>
 <body>

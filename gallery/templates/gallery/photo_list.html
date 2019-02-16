@@ -93,6 +93,31 @@ document.addEventListener("DOMContentLoaded", function() {
                data-photo="{{ photo.id }}"
                data-albums="[{{ photo.album_set|sort_by:'id'|key_to_list:'id'|join:',' }}]"
                data-visibility="{% if photo.public %}public{% else %}private{% endif %}">
+          <div class="image-info">
+            {% spaceless %}
+            {% if photo.date_taken %}
+              <i data-feather="calendar" class="image-info-icon"></i><span class="image-info-data">{{ photo.date_taken }}</span>
+            {% endif %}
+            {% if photo.model %}
+              <i data-feather="camera" class="image-info-icon"></i><span class="image-info-data">{{ photo.model }}</span>
+            {% endif %}
+            {% if photo.lens %}
+              <i data-feather="circle" class="image-info-icon"></i><span class="image-info-data">{{ photo.lens }}</span>
+            {% endif %}
+            {% if photo.focal_length %}
+              <span class="image-info-icon">f</span><span class="image-info-data">{{ photo.focal_length }} mm</span>
+            {% endif %}
+            {% if photo.aperture %}
+              <i data-feather="aperture" class="image-info-icon"></i><span class="image-info-data">f/{{ photo.aperture }}</span>
+            {% endif %}
+            {% if photo.shutter_speed_str %}
+              <i data-feather="clock" class="image-info-icon"></i><span class="image-info-data">{{ photo.shutter_speed_str }} s</span>
+            {% endif %}
+            {% if photo.iso %}
+              <span class="image-info-icon">ISO</span><span class="image-info-data">{{ photo.iso }}</span>
+            {% endif %}
+            {% endspaceless %}
+          </div>
         </a>
       {% endfor %}
     </div>
