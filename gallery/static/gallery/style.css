@@ -206,7 +206,11 @@ img {
   display: block;
   overflow: hidden;
   line-height: 1.7em;
-  margin-bottom: 1em;
+}
+
+/* Spacing between children of image-info when put into fancybox caption */
+.fancybox-caption__body > * {
+  margin-bottom: 0.7em;
 }
 
 /* Change position and design of image-info area */

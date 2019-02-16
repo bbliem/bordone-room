@@ -95,6 +95,10 @@ document.addEventListener("DOMContentLoaded", function() {
                data-visibility="{% if photo.public %}public{% else %}private{% endif %}">
           <div class="image-info">
             {% spaceless %}
+            <h2>{{ photo.name }}</h2>
+            {% if photo.description %}
+              {{ photo.description|linebreaks }}
+            {% endif %}
             {% if photo.date_taken %}
               <i data-feather="calendar" class="image-info-icon"></i><span class="image-info-data">{{ photo.date_taken }}</span>
             {% endif %}
