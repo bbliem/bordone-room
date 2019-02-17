@@ -10,14 +10,13 @@
 <link rel="stylesheet" type="text/css" href="{% static 'gallery/jquery-ui.min.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
 
-{% if perms.gallery.change_photo %}
-<script src="{% static 'gallery/photo_batch_edit.js' %}" defer></script>
-{% endif %}
 <script src="{% static 'gallery/jquery-ui.min.js'%}" defer></script>
 {# XXX Some Bootstrap components do not require Papper.js or Bootstrap JS, check which are needed #}
 <script src='{% static 'gallery/js.cookie.js' %}' defer></script>
 {# https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script #}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js" defer></script>
+{% if perms.gallery.change_photo %}
+<script src="{% static 'gallery/photo_batch_edit.js' %}" defer></script>
 <script>
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
@@ -39,6 +38,7 @@ document.addEventListener("DOMContentLoaded", function() {
   initAlbumsSelector();
 });
 </script>
+{% endif %}
 {% endblock %}
 
 {% block content %}
