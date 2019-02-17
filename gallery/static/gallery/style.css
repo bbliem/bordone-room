@@ -127,9 +127,13 @@ img {
   border-color: #6f6866;
 }
 
-.btn-primary:hover {
+.btn-primary:hover, .btn-primary:not(:disabled):not(.disabled):active {
   background-color: #e3b505;
   border-color: #e3b505;
+}
+
+.btn-primary:focus, .btn-primary:not(:disabled):not(.disabled):active:focus {
+  box-shadow: 0 0 0 .2rem rgba(227,181,5,.5);
 }
 
 /* Override some Justified Gallery styles */
