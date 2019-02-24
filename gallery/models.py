@@ -135,7 +135,7 @@ class Album(models.Model):
     title = models.CharField(max_length=200)
     slug = AutoSlugField(populate_from='title', unique=True, null=True)
     description = models.TextField()
-    cover_photo = models.ForeignKey(Photo, null=True, on_delete=models.SET_NULL, related_name='+') # TODO enforce that it's in this album? Avoid NULL values?
+    cover_photo = models.ForeignKey(Photo, blank=True, null=True, on_delete=models.SET_NULL, related_name='+') # TODO enforce that it's in this album? Avoid NULL values?
     photos = models.ManyToManyField(Photo, blank=True)
     creation_date = models.DateTimeField(default=timezone.now)
     modification_date = models.DateTimeField(default=timezone.now)

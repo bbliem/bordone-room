@@ -9,6 +9,14 @@ a.disabled {
   cursor: default;
 }
 
+a {
+  color: #6f6866;
+}
+
+a:hover {
+  color: #e3b505;
+}
+
 img {
   max-width: 100%;
   max-height: 100%;
@@ -94,6 +102,11 @@ img {
   height: 24px;
   vertical-align: text-bottom;
   margin-right: 4px;
+}
+
+.feather-big {
+  width: 100%;
+  height: 100%;
 }
 
 .dm-uploader {

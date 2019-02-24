@@ -15,7 +15,8 @@
           {% if album.cover_photo %}
             <img alt="{{ album.title }}" src="{{ album.cover_photo.thumbnail.url }}">
           {% else %}
-            {{ album.title }}
+            <img data-feather="image" class="feather-big">
+            <div class="caption caption-visible">{{ album.title }}</div>
           {% endif %}
         </a>
       {% endfor %}
