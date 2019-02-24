@@ -21,6 +21,12 @@ class PhotoAdmin(admin.ModelAdmin):
     list_filter = ['date_taken', 'upload_date']
     search_fields = ['name', 'original']
 
-admin.site.register(Photo, PhotoAdmin)
 
-admin.site.register(Album)
+class AlbumAdmin(admin.ModelAdmin):
+    list_display = ('title', 'creation_date', 'modification_date')
+    list_filter = ['creation_date', 'modification_date']
+    search_fields = ['title', 'description']
+
+
+admin.site.register(Photo, PhotoAdmin)
+admin.site.register(Album, AlbumAdmin)
