@@ -102,8 +102,8 @@ document.addEventListener("DOMContentLoaded", function() {
             {% if photo.date_taken %}
               <i data-feather="calendar" class="image-info-icon"></i><span class="image-info-data">{{ photo.date_taken }}</span>
             {% endif %}
-            {% if photo.model %}
-              <i data-feather="camera" class="image-info-icon"></i><span class="image-info-data">{{ photo.model }}</span>
+            {% if photo.make or photo.model %}
+              <i data-feather="camera" class="image-info-icon"></i><span class="image-info-data">{{ photo.make }} {{ photo.model }}</span>
             {% endif %}
             {% if photo.lens %}
               <i data-feather="circle" class="image-info-icon"></i><span class="image-info-data">{{ photo.lens }}</span>
