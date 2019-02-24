@@ -7,6 +7,7 @@ import sys
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.conf import settings
+from django.db.models import Case, Count, When
 from django.urls import reverse_lazy
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.utils.decorators import method_decorator
@@ -179,9 +180,8 @@ class AlbumListView(CommonContextMixin, generic.ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         if not self.request.user.is_authenticated:
-            # Only display albums with a public cover photo
-            # FIXME do something more reasonable
-            queryset = queryset.select_related('cover_photo').filter(cover_photo__public=True)
+            # Only display albums containing at least one public photo
+            queryset = queryset.annotate(num_public=Count(Case(When(photos__public=True, then=1)))).filter(num_public__gt=0)
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -208,9 +208,8 @@ class AlbumDetailView(CommonContextMixin, generic.DetailView):
     def get_queryset(self):
         queryset = super().get_queryset()
         if not self.request.user.is_authenticated:
-            # Only display albums with a public cover photo
-            # FIXME do something more reasonable
-            queryset = queryset.select_related('cover_photo').filter(cover_photo__public=True)
+            # Only display albums containing at least one public photo
+            queryset = queryset.annotate(num_public=Count(Case(When(photos__public=True, then=1)))).filter(num_public__gt=0)
         return queryset
 
     def get_context_data(self, **kwargs):
