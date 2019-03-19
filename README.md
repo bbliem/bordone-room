@@ -4,6 +4,8 @@ Bordone Room
 Bordone Room is a free web application for self-hosted photo galleries. It uses
 Django and some JavaScript libraries.
 
+[![Build Status](https://travis-ci.com/bbliem/bordone-room.svg?branch=master)](https://travis-ci.com/bbliem/bordone-room)
+
 
 ## Installation
 
