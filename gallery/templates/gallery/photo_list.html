@@ -39,6 +39,13 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 {% endif %}
+{# Set metadata for previews on, e.g., Facebook #}
+{% if photo_list %}
+  <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ photo_list.first.thumbnail.url }}">
+{% endif %}
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:title" content="{{ page_title }}">
+<meta property="og:description" content="{% if page_description %}{{ page_description }}{% else %}Photos in Bordone Room{% endif %}">
 {% endblock %}
 
 {% block content %}
