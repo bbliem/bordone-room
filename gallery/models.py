@@ -72,6 +72,9 @@ class Photo(models.Model):
     def photo_detail_thumbnail(self):
         return getattr(self, f'thumbnail_{settings.PHOTO_DETAIL_THUMBNAIL_SIZE}')
 
+    def social_media_thumbnail(self):
+        return getattr(self, f'thumbnail_{settings.SOCIAL_MEDIA_THUMBNAIL_SIZE}')
+
     def biggest_thumbnail(self):
         return getattr(self, f'thumbnail_{settings.GALLERY_THUMBNAIL_SIZES[-1]}')
 

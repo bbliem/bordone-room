@@ -230,6 +230,8 @@ IMAGEKIT_DEFAULT_CACHEFILE_STRATEGY = 'imagekit.cachefiles.strategies.Optimistic
 GALLERY_THUMBNAIL_SIZES = [240, 320, 500, 640, 800, 1024, 1600, 2048]
 # When viewing a photo, we actually display a thumbnail of the following size, not the original
 PHOTO_DETAIL_THUMBNAIL_SIZE = 1600
+# Size of thumbnails used for previews on social media
+SOCIAL_MEDIA_THUMBNAIL_SIZE = 640
 # Settings for Justified Gallery
 JG_ROW_HEIGHT = 320
 JG_MARGINS = 5

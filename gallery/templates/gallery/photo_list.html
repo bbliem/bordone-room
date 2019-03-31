@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function() {
 {% endif %}
 {# Set metadata for previews on, e.g., Facebook #}
 {% if photo_list %}
-  <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ photo_list.first.thumbnail.url }}">
+  <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ photo_list.first.social_media_thumbnail.url }}">
 {% endif %}
 <meta property="og:url" content="{{ request.build_absolute_uri }}">
 <meta property="og:title" content="{{ page_title }}">
