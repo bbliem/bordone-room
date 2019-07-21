@@ -3,6 +3,12 @@
 {% block header %}
 {{ block.super }}
 {% include "gallery/fancybox_header.html" %}
+
+{# Set metadata for previews on, e.g., Facebook #}
+<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ photo.social_media_thumbnail.url }}">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:title" content="{{ photo.name }}">
+<meta property="og:description" content="{% if photo.description %}{{ photo.description }}{% else %}Photo in Bordone Room{% endif %}">
 {% endblock %}
 
 {% block content %}
