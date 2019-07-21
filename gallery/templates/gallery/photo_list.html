@@ -48,6 +48,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <meta property="og:url" content="{{ request.build_absolute_uri }}">
 <meta property="og:title" content="{{ page_title }}">
 <meta property="og:description" content="{% if page_description %}{{ page_description }}{% else %}Photos in Bordone Room{% endif %}">
+<meta property="og:type" content="website">
 {% endblock %}
 
 {% block content %}

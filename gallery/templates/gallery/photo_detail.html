@@ -11,6 +11,7 @@
 <meta property="og:url" content="{{ request.build_absolute_uri }}">
 <meta property="og:title" content="{{ photo.name }}">
 <meta property="og:description" content="{% if photo.description %}{{ photo.description }}{% else %}Photo in Bordone Room{% endif %}">
+<meta property="og:type" content="website">
 {% endblock %}
 
 {% block content %}
