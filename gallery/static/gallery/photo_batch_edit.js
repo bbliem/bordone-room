@@ -152,6 +152,7 @@ function openEditSidebar() {
   //$("#open-edit-sidebar-button").css("display", "none");
   $("#content").addClass("right-sidebar-shown");
   $("#gallery>a").addClass("disabled");
+  $("#gallery>a").removeData("fancybox").removeAttr("data-fancybox");
 
   $("#gallery").justifiedGallery({
     rowHeight: 120,
@@ -188,6 +189,7 @@ function closeEditSidebar() {
   initAlbumsSelector();
   $("#content").removeClass("right-sidebar-shown");
   $("#gallery>a").removeClass("disabled");
+  $("#gallery>a").data("fancybox", "gallery").attr("data-fancybox", "gallery");
 
   $("#gallery").justifiedGallery({
     rowHeight: jgRowHeight,

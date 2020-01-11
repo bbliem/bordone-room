@@ -7,7 +7,10 @@ $.fancybox.defaults.btnTpl.info = '<button data-fancybox-info class="fancybox-bu
   </button>';
 
 // Initialize fancybox with custom settings
-$('[data-fancybox="gallery"]').fancybox({
+//$('[data-fancybox="gallery"]').fancybox({
+$().fancybox({
+  selector: '[data-fancybox="gallery"]:not(.disabled)',
+
   preventCaptionOverlap: false,
   infobar: false,
 
