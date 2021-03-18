@@ -5,7 +5,7 @@ django-debug-toolbar==1.11
 django-imagekit==4.0.2
 django-widget-tweaks==1.4.3
 pilkit==2.0
-Pillow==6.2.2
+Pillow==8.1.1
 psycopg2-binary==2.8.4
 PyExifTool==0.1-bbliem
 python-decouple==3.1
