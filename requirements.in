@@ -5,6 +5,7 @@ django-autoslug
 django-imagekit
 django-widget-tweaks
 git+git://github.com/bbliem/PyExifTool@master#egg=PyExifTool
+gunicorn
 pilkit
 psycopg2-binary
 python-decouple

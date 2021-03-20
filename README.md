@@ -56,6 +56,13 @@ Depending on your setup, it may be necessary to edit some settings in
 Instructions for deploying the application can be found in the [Django
 documentation](https://docs.djangoproject.com/en/2.1/howto/deployment/wsgi/).
 
+## Operating behind a reverse proxy
+
+If you run the app behind a reverse proxy, you may find that the URLs Django generates contain internal IP addresses instead of the original host. One way of fixing this is making your reverse proxy set the `X-Forwarded-Host` and `X-Forwarded-Proto` headers accordingly. Apache, for example, seems to set `X-Forwarded-Host` out-of-the-box, but for `X-Forwarded-Proto` it seems you need to add the following line to your Apache configuration:
+```
+RequestHeader set "X-Forwarded-Proto" expr=%{REQUEST_SCHEME}
+```
+Now, to make Django take these headers into account, set the environment variable `USE_PROXY_HEADERS` to `true` (e.g., in your `.env` file).
 
 ## Usage
 

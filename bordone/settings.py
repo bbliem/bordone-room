@@ -184,6 +184,16 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 0
 MEDIA_ROOT = decouple.config('MEDIA_ROOT')
 MEDIA_URL = decouple.config('MEDIA_URL', default='/media/')
 
+# If serving from a subdirectory, you may want to set FORCE_SCRIPT_NAME
+FORCE_SCRIPT_NAME = decouple.config('FORCE_SCRIPT_NAME', default=None)
+
+# If Django is behind a reverse proxy, set USE_PROXY_HEADERS to true to make
+# Django use the X-Forwarded-Proto and X-Forwarded-Host headers for generating
+# URLs. (Make sure your reverse proxy sets these headers. See the README.)
+if decouple.config('USE_PROXY_HEADERS', default=False, cast=bool):
+    USE_X_FORWARDED_HOST = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 IMAGEKIT_CACHEFILE_DIR = 'thumbnails' # Put thumbnails in this subdirectory of MEDIA_ROOT
 IMAGEKIT_SPEC_CACHEFILE_NAMER = 'gallery.namers.source_name_as_path'
 IMAGEKIT_DEFAULT_FILE_STORAGE = 'gallery.storage.ThumbnailStorage'

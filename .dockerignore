@@ -1,0 +1,12 @@
+.env
+.env.*
+.git
+.gitignore
+.idea
+media
+venv
+db.sqlite3
+build-gitlab.sh
+Dockerfile
+django.log
+gallery.log
