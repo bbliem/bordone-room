@@ -169,6 +169,10 @@ TEST_RUNNER = 'gallery.runner.CustomDiscoverRunner'
 STATIC_URL = decouple.config('STATIC_URL', default='/static/')
 STATIC_ROOT = decouple.config('STATIC_ROOT')
 
+# Default primary key field type
+# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # File uploads
 FILE_UPLOAD_PERMISSIONS = 0o644

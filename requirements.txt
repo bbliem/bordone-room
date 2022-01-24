@@ -4,9 +4,9 @@
 #
 #    pip-compile requirements.in
 #
-asgiref==3.3.4
+asgiref==3.5.0
     # via django
-django==3.2.8
+django==4.0.1
     # via
     #   -r requirements.in
     #   django-appconf
@@ -34,8 +34,6 @@ pyexiftool @ git+git://github.com/bbliem/PyExifTool@master
     # via -r requirements.in
 python-decouple==3.4
     # via -r requirements.in
-pytz==2021.1
-    # via django
 six==1.16.0
     # via django-imagekit
 sqlparse==0.4.2
