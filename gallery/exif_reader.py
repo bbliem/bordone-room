@@ -1,5 +1,4 @@
-from datetime import datetime
-import pytz
+from datetime import datetime, timezone
 
 import logging
 from pprint import pformat
@@ -12,7 +11,7 @@ def _parse_datetime(s):
     try:
         dto = datetime.strptime(s, EXIF_DATE_FORMAT)
         # XXX use UTC as EXIF has no information on time zones
-        return dto.replace(tzinfo=pytz.UTC)
+        return dto.replace(tzinfo=timezone.utc)
     except (ValueError, TypeError):
         return None
 

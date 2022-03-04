@@ -3,7 +3,6 @@ import glob
 import json
 import logging
 import os
-import pytz
 import re
 from datetime import datetime
 

@@ -6,19 +6,19 @@
 #
 asgiref==3.5.0
     # via django
-django==4.0.1
+django==4.0.3
     # via
     #   -r requirements.in
     #   django-appconf
-django-appconf==1.0.4
+django-appconf==1.0.5
     # via
     #   -r requirements.in
     #   django-imagekit
 django-autoslug==1.9.8
     # via -r requirements.in
-django-imagekit==4.0.2
+django-imagekit==4.1.0
     # via -r requirements.in
-django-widget-tweaks==1.4.8
+django-widget-tweaks==1.4.12
     # via -r requirements.in
 gunicorn==20.1.0
     # via -r requirements.in
@@ -26,13 +26,13 @@ pilkit==2.0
     # via
     #   -r requirements.in
     #   django-imagekit
-pillow==9.0.0
+pillow==9.0.1
     # via -r requirements.in
 psycopg2-binary==2.8.6
     # via -r requirements.in
 pyexiftool @ git+git://github.com/bbliem/PyExifTool@master
     # via -r requirements.in
-python-decouple==3.4
+python-decouple==3.6
     # via -r requirements.in
 six==1.16.0
     # via django-imagekit
