@@ -26,7 +26,7 @@ pilkit==2.0
     # via
     #   -r requirements.in
     #   django-imagekit
-pillow==9.0.1
+pillow==9.3.0
     # via -r requirements.in
 psycopg2-binary==2.8.6
     # via -r requirements.in
